@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.InstorageDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Instorage" >
+    <id column="is_id" property="isId" jdbcType="BIGINT" />
+    <result column="bo_id" property="boId" jdbcType="BIGINT" />
+    <result column="is_operator_id" property="isOperatorId" jdbcType="BIGINT" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+    <result column="is_time" property="isTime" jdbcType="TIMESTAMP" />
+    <result column="is_number" property="isNumber" jdbcType="INTEGER" />
+    <result column="is_afterNumber" property="isAfternumber" jdbcType="INTEGER" />
+    <result column="is_note" property="isNote" jdbcType="VARCHAR" />
+    <result column="is_operator_name" property="isOperatorName" jdbcType="VARCHAR" />
+    <result column="is_goods_price" property="isGoodsPrice" jdbcType="DECIMAL" />
+    <result column="is_goods_total" property="isGoodsTotal" jdbcType="DECIMAL" />
+    <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods">
+      <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+      <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+      <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+      <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+      <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+      <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+      <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+      <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+      <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+      <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+      <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+      <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+      <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+      <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+      <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+      <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+      <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+      <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+      <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+      <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    instorage.is_id, instorage.bo_id, instorage.is_operator_id, instorage.goods_id, instorage.is_time,
+    instorage.is_number, instorage.is_afterNumber, instorage.is_note, instorage.is_operator_name,
+    instorage.is_goods_price, instorage.is_goods_total,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+  </sql>
+  <sql id="fromTable">
+    instorage left join goods on instorage.goods_id = goods.goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable"/>
+    where is_id = #{isId,jdbcType=BIGINT}
+  </select>
+  <select id="listInstorage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    <include refid="fromTable"/>
+  </select>
+  <select id="listInstorageByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    <include refid="fromTable"/>
+    <where>
+      <if test="operatorName != null and operatorName != ''">
+        and outstorage.os_operator_name like concat(concat('%',#{operatorName}),'%')
+      </if>
+      <if test="goodsId != null and goodsId != ''">
+        and outstorage.goods_id = #{goodsId}
+      </if>
+      <if test="goodsName != null and goodsName != ''">
+        and goods.goods_name = concat(concat('%',#{goodsName}),'%')
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(instorage.is_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(in.is_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from instorage
+    where is_id = #{isId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Instorage" >
+    insert into instorage (is_id, bo_id, is_operator_id, 
+      goods_id, is_time, is_number, 
+      is_afterNumber, is_note, is_operator_name, 
+      is_goods_price, is_goods_total)
+    values (#{isId,jdbcType=BIGINT}, #{boId,jdbcType=BIGINT}, #{isOperatorId,jdbcType=BIGINT}, 
+      #{goodsId,jdbcType=BIGINT}, #{isTime,jdbcType=TIMESTAMP}, #{isNumber,jdbcType=INTEGER}, 
+      #{isAfternumber,jdbcType=INTEGER}, #{isNote,jdbcType=VARCHAR}, #{isOperatorName,jdbcType=VARCHAR}, 
+      #{isGoodsPrice,jdbcType=DECIMAL}, #{isGoodsTotal,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Instorage" >
+    insert into instorage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isId != null" >
+        is_id,
+      </if>
+      <if test="boId != null" >
+        bo_id,
+      </if>
+      <if test="isOperatorId != null" >
+        is_operator_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="isTime != null" >
+        is_time,
+      </if>
+      <if test="isNumber != null" >
+        is_number,
+      </if>
+      <if test="isAfternumber != null" >
+        is_afterNumber,
+      </if>
+      <if test="isNote != null" >
+        is_note,
+      </if>
+      <if test="isOperatorName != null" >
+        is_operator_name,
+      </if>
+      <if test="isGoodsPrice != null" >
+        is_goods_price,
+      </if>
+      <if test="isGoodsTotal != null" >
+        is_goods_total,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isId != null" >
+        #{isId,jdbcType=BIGINT},
+      </if>
+      <if test="boId != null" >
+        #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="isOperatorId != null" >
+        #{isOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="isTime != null" >
+        #{isTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isNumber != null" >
+        #{isNumber,jdbcType=INTEGER},
+      </if>
+      <if test="isAfternumber != null" >
+        #{isAfternumber,jdbcType=INTEGER},
+      </if>
+      <if test="isNote != null" >
+        #{isNote,jdbcType=VARCHAR},
+      </if>
+      <if test="isOperatorName != null" >
+        #{isOperatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="isGoodsPrice != null" >
+        #{isGoodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="isGoodsTotal != null" >
+        #{isGoodsTotal,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Instorage" >
+    update instorage
+    <set >
+      <if test="boId != null" >
+        bo_id = #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="isOperatorId != null" >
+        is_operator_id = #{isOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="isTime != null" >
+        is_time = #{isTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isNumber != null" >
+        is_number = #{isNumber,jdbcType=INTEGER},
+      </if>
+      <if test="isAfternumber != null" >
+        is_afterNumber = #{isAfternumber,jdbcType=INTEGER},
+      </if>
+      <if test="isNote != null" >
+        is_note = #{isNote,jdbcType=VARCHAR},
+      </if>
+      <if test="isOperatorName != null" >
+        is_operator_name = #{isOperatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="isGoodsPrice != null" >
+        is_goods_price = #{isGoodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="isGoodsTotal != null" >
+        is_goods_total = #{isGoodsTotal,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where is_id = #{isId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Instorage" >
+    update instorage
+    set bo_id = #{boId,jdbcType=BIGINT},
+      is_operator_id = #{isOperatorId,jdbcType=BIGINT},
+      goods_id = #{goodsId,jdbcType=BIGINT},
+      is_time = #{isTime,jdbcType=TIMESTAMP},
+      is_number = #{isNumber,jdbcType=INTEGER},
+      is_afterNumber = #{isAfternumber,jdbcType=INTEGER},
+      is_note = #{isNote,jdbcType=VARCHAR},
+      is_operator_name = #{isOperatorName,jdbcType=VARCHAR},
+      is_goods_price = #{isGoodsPrice,jdbcType=DECIMAL},
+      is_goods_total = #{isGoodsTotal,jdbcType=DECIMAL}
+    where is_id = #{isId,jdbcType=BIGINT}
+  </update>
+</mapper>

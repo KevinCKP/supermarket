@@ -1,4 +1,6 @@
 spring:
+    jackson:
+      default-property-inclusion: non_null
     datasource:
       name: test
       url: jdbc:mysql://localhost:3306/supermarket?characterEncoding=utf8&useSSL=false
@@ -27,15 +29,43 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
+    thymeleaf:
+      prefix: classpath:/templates/
+      suffix: .html
+      mode: HTML5
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 12345
+      poolMaxTotal : 1000
+      poolMaxIdle : 500
+      poolMaxWait : 500
+      timeout: 20
+
+      resources:
+            add-mappings: true
+            chain:
+              cache: true
+              enabled: true
+              gzipped: true
+              html-application-cache: true
+            static-locations: classpath:/
+            cache:
+              period: 3600ms
+
 
 mybatis:
     #Mybatis扫描
     mapper-locations: classpath*:mapper/*.xml
     #起别名。可省略写mybatis的xml中的resultType的全路径
-    type-aliases-package: com.scau.kevin.supermarket.pojo
+    type-aliases-package: com.scau.kevin.supermarket.entity
+
 
 server:
   port: 8080
+logging:
+  level:
+    com.scau.kevin.supermarket.dao.*: debug
 
 
 

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scau.kevin.supermarket.dao.GoodsDao">
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Goods">
+    <id column="goods_id" jdbcType="BIGINT" property="goodsId" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="supplier_id" jdbcType="BIGINT" property="supplierId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_barcode" jdbcType="VARCHAR" property="goodsBarcode" />
+    <result column="goods_salePrice" jdbcType="DECIMAL" property="goodsSaleprice" />
+    <result column="goods_specification" jdbcType="VARCHAR" property="goodsSpecification" />
+    <result column="goods_metricUnit" jdbcType="VARCHAR" property="goodsMetricunit" />
+    <result column="goods_buyPrice" jdbcType="DECIMAL" property="goodsBuyprice" />
+    <result column="goods_memPrice" jdbcType="DECIMAL" property="goodsMemprice" />
+    <result column="goods_destination" jdbcType="VARCHAR" property="goodsDestination" />
+    <result column="goods_producePlace" jdbcType="VARCHAR" property="goodsProduceplace" />
+    <result column="goods_category" jdbcType="VARCHAR" property="goodsCategory" />
+    <result column="goods_supplier" jdbcType="VARCHAR" property="goodsSupplier" />
+    <result column="goods_material" jdbcType="VARCHAR" property="goodsMaterial" />
+    <result column="goods_brand" jdbcType="VARCHAR" property="goodsBrand" />
+    <result column="goods_picture" jdbcType="VARCHAR" property="goodsPicture" />
+    <result column="goods_create_time" jdbcType="TIMESTAMP" property="goodsCreateTime" />
+    <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+    <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    goods_id, category_id, supplier_id, goods_name, goods_barcode, goods_salePrice, goods_specification, 
+    goods_metricUnit, goods_buyPrice, goods_memPrice, goods_destination, goods_producePlace, 
+    goods_category, goods_supplier, goods_material, goods_brand, goods_picture, goods_create_time, 
+    goods_update_time, goods_state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where goods_id = #{goodsId,jdbcType=BIGINT}
+  </select>
+
+  <select id="listGoods" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from goods
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from goods
+    where goods_id = #{goodsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Goods">
+    insert into goods (goods_id, category_id, supplier_id, 
+      goods_name, goods_barcode, goods_salePrice, 
+      goods_specification, goods_metricUnit, goods_buyPrice, 
+      goods_memPrice, goods_destination, goods_producePlace, 
+      goods_category, goods_supplier, goods_material, 
+      goods_brand, goods_picture, goods_create_time, 
+      goods_update_time, goods_state)
+    values (#{goodsId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{supplierId,jdbcType=BIGINT}, 
+      #{goodsName,jdbcType=VARCHAR}, #{goodsBarcode,jdbcType=VARCHAR}, #{goodsSaleprice,jdbcType=DECIMAL}, 
+      #{goodsSpecification,jdbcType=VARCHAR}, #{goodsMetricunit,jdbcType=VARCHAR}, #{goodsBuyprice,jdbcType=DECIMAL}, 
+      #{goodsMemprice,jdbcType=DECIMAL}, #{goodsDestination,jdbcType=VARCHAR}, #{goodsProduceplace,jdbcType=VARCHAR}, 
+      #{goodsCategory,jdbcType=VARCHAR}, #{goodsSupplier,jdbcType=VARCHAR}, #{goodsMaterial,jdbcType=VARCHAR}, 
+      #{goodsBrand,jdbcType=VARCHAR}, #{goodsPicture,jdbcType=VARCHAR}, #{goodsCreateTime,jdbcType=TIMESTAMP}, 
+      #{goodsUpdateTime,jdbcType=TIMESTAMP}, #{goodsState,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Goods">
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="supplierId != null">
+        supplier_id,
+      </if>
+      <if test="goodsName != null">
+        goods_name,
+      </if>
+      <if test="goodsBarcode != null">
+        goods_barcode,
+      </if>
+      <if test="goodsSaleprice != null">
+        goods_salePrice,
+      </if>
+      <if test="goodsSpecification != null">
+        goods_specification,
+      </if>
+      <if test="goodsMetricunit != null">
+        goods_metricUnit,
+      </if>
+      <if test="goodsBuyprice != null">
+        goods_buyPrice,
+      </if>
+      <if test="goodsMemprice != null">
+        goods_memPrice,
+      </if>
+      <if test="goodsDestination != null">
+        goods_destination,
+      </if>
+      <if test="goodsProduceplace != null">
+        goods_producePlace,
+      </if>
+      <if test="goodsCategory != null">
+        goods_category,
+      </if>
+      <if test="goodsSupplier != null">
+        goods_supplier,
+      </if>
+      <if test="goodsMaterial != null">
+        goods_material,
+      </if>
+      <if test="goodsBrand != null">
+        goods_brand,
+      </if>
+      <if test="goodsPicture != null">
+        goods_picture,
+      </if>
+      <if test="goodsCreateTime != null">
+        goods_create_time,
+      </if>
+      <if test="goodsUpdateTime != null">
+        goods_update_time,
+      </if>
+      <if test="goodsState != null">
+        goods_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="supplierId != null">
+        #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsBarcode != null">
+        #{goodsBarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSaleprice != null">
+        #{goodsSaleprice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSpecification != null">
+        #{goodsSpecification,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsMetricunit != null">
+        #{goodsMetricunit,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsBuyprice != null">
+        #{goodsBuyprice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsMemprice != null">
+        #{goodsMemprice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsDestination != null">
+        #{goodsDestination,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsProduceplace != null">
+        #{goodsProduceplace,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCategory != null">
+        #{goodsCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSupplier != null">
+        #{goodsSupplier,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsMaterial != null">
+        #{goodsMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsBrand != null">
+        #{goodsBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPicture != null">
+        #{goodsPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCreateTime != null">
+        #{goodsCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsUpdateTime != null">
+        #{goodsUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsState != null">
+        #{goodsState,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Goods">
+    update goods
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="supplierId != null">
+        supplier_id = #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsBarcode != null">
+        goods_barcode = #{goodsBarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSaleprice != null">
+        goods_salePrice = #{goodsSaleprice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSpecification != null">
+        goods_specification = #{goodsSpecification,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsMetricunit != null">
+        goods_metricUnit = #{goodsMetricunit,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsBuyprice != null">
+        goods_buyPrice = #{goodsBuyprice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsMemprice != null">
+        goods_memPrice = #{goodsMemprice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsDestination != null">
+        goods_destination = #{goodsDestination,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsProduceplace != null">
+        goods_producePlace = #{goodsProduceplace,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCategory != null">
+        goods_category = #{goodsCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSupplier != null">
+        goods_supplier = #{goodsSupplier,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsMaterial != null">
+        goods_material = #{goodsMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsBrand != null">
+        goods_brand = #{goodsBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPicture != null">
+        goods_picture = #{goodsPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCreateTime != null">
+        goods_create_time = #{goodsCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsUpdateTime != null">
+        goods_update_time = #{goodsUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsState != null">
+        goods_state = #{goodsState,jdbcType=TINYINT},
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Goods">
+    update goods
+    set category_id = #{categoryId,jdbcType=BIGINT},
+      supplier_id = #{supplierId,jdbcType=BIGINT},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_barcode = #{goodsBarcode,jdbcType=VARCHAR},
+      goods_salePrice = #{goodsSaleprice,jdbcType=DECIMAL},
+      goods_specification = #{goodsSpecification,jdbcType=VARCHAR},
+      goods_metricUnit = #{goodsMetricunit,jdbcType=VARCHAR},
+      goods_buyPrice = #{goodsBuyprice,jdbcType=DECIMAL},
+      goods_memPrice = #{goodsMemprice,jdbcType=DECIMAL},
+      goods_destination = #{goodsDestination,jdbcType=VARCHAR},
+      goods_producePlace = #{goodsProduceplace,jdbcType=VARCHAR},
+      goods_category = #{goodsCategory,jdbcType=VARCHAR},
+      goods_supplier = #{goodsSupplier,jdbcType=VARCHAR},
+      goods_material = #{goodsMaterial,jdbcType=VARCHAR},
+      goods_brand = #{goodsBrand,jdbcType=VARCHAR},
+      goods_picture = #{goodsPicture,jdbcType=VARCHAR},
+      goods_create_time = #{goodsCreateTime,jdbcType=TIMESTAMP},
+      goods_update_time = #{goodsUpdateTime,jdbcType=TIMESTAMP},
+      goods_state = #{goodsState,jdbcType=TINYINT}
+    where goods_id = #{goodsId,jdbcType=BIGINT}
+  </update>
+  <select id="listByFactors" parameterType="Goods" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from goods
+    <where>
+      <if test="goodsCategory != null and goodsCategory != ''">
+        goods_category = #{goodsCategory}
+      </if>
+      <if test="goodsName != null and goodsName != ''">
+        goods_name like concat(concat('%',#{goodsName}),'%')
+      </if>
+      <if test="goodsBrand != null and goodsBrand != ''">
+        goods_brand like concat(concat('%',#{goodsBrand},'%'))
+      </if>
+      <if test="goodsSupplier != null and goodsSupplier != ''">
+        goods_supplier like concat(concat('%',#{goodsSupplier}),'%')
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(goods_create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(goods_create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+    </where>
+  </select>
+
+  <select id="goodsIsExisted" parameterType="java.lang.Integer">
+    select count(id)
+    from goods
+    where goods_id = #{goodsId,jdbcType=BIGINT}
+  </select>
+
+  <update id="updateGoodsState">
+    update goods
+    set goods_state = #{goodsState}
+    where goods_id = #{goodsId}
+  </update>
+</mapper>

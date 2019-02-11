@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.OutstorageDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Outstorage" >
+    <id column="os_id" property="osId" jdbcType="BIGINT" />
+    <result column="os_operator_id" property="osOperatorId" jdbcType="BIGINT" />
+    <result column="os_operator_name" property="osOperatorName" jdbcType="VARCHAR" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+    <result column="os_date" property="osDate" jdbcType="TIMESTAMP" />
+    <result column="os_number" property="osNumber" jdbcType="INTEGER" />
+    <result column="os_leftNumber" property="osLeftnumber" jdbcType="INTEGER" />
+    <result column="os_money" property="osMoney" jdbcType="DECIMAL" />
+    <result column="os_destination" property="osDestination" jdbcType="VARCHAR" />
+    <result column="os_note" property="osNote" jdbcType="VARCHAR" />
+    <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods">
+      <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+      <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+      <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+      <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+      <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+      <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+      <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+      <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+      <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+      <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+      <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+      <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+      <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+      <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+      <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+      <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+      <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+      <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+      <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+      <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    outstorage.os_id, outstorage.os_operator_id, outstorage.os_operator_name, outstorage.goods_id,
+    outstorage.os_date, outstorage.os_number, outstorage.os_leftNumber, outstorage.os_money, outstorage.os_destination, os_note,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+  </sql>
+  <sql id="fromTable">
+    outstorage left join goods on outstorage.goods_id = goods.goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable"/>
+    where os_id = #{osId,jdbcType=BIGINT}
+  </select>
+  <select id="listOutstorage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    <include refid="fromTable"/>
+  </select>
+  <select id="listOutstorageByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    <include refid="fromTable"/>
+    <where>
+      <if test="operatorName != null and operatorName != ''">
+        and outstorage.os_operator_name like concat(concat('%',#{operatorName}),'%')
+      </if>
+      <if test="goodsId != null and goodsId != ''">
+        and outstorage.goods_id = #{goodsId}
+      </if>
+      <if test="goodsName != null and goodsName != ''">
+        and goods.goods_name = concat(concat('%',#{goodsName}),'%')
+      </if>
+      <if test="destination != null and destination != ''">
+        and outstorage.os_destination like concat(concat('%',#{destination}),'%')
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(outstorage.os_date,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(outstorage.os_date,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from outstorage
+    where os_id = #{osId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Outstorage" >
+    insert into outstorage (os_id, os_operator_id, os_operator_name, 
+      goods_id, os_date, os_number, 
+      os_leftNumber, os_money, os_destination, 
+      os_note)
+    values (#{osId,jdbcType=BIGINT}, #{osOperatorId,jdbcType=BIGINT}, #{osOperatorName,jdbcType=VARCHAR}, 
+      #{goodsId,jdbcType=BIGINT}, #{osDate,jdbcType=TIMESTAMP}, #{osNumber,jdbcType=INTEGER}, 
+      #{osLeftnumber,jdbcType=INTEGER}, #{osMoney,jdbcType=DECIMAL}, #{osDestination,jdbcType=VARCHAR}, 
+      #{osNote,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Outstorage" >
+    insert into outstorage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="osId != null" >
+        os_id,
+      </if>
+      <if test="osOperatorId != null" >
+        os_operator_id,
+      </if>
+      <if test="osOperatorName != null" >
+        os_operator_name,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="osDate != null" >
+        os_date,
+      </if>
+      <if test="osNumber != null" >
+        os_number,
+      </if>
+      <if test="osLeftnumber != null" >
+        os_leftNumber,
+      </if>
+      <if test="osMoney != null" >
+        os_money,
+      </if>
+      <if test="osDestination != null" >
+        os_destination,
+      </if>
+      <if test="osNote != null" >
+        os_note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="osId != null" >
+        #{osId,jdbcType=BIGINT},
+      </if>
+      <if test="osOperatorId != null" >
+        #{osOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="osOperatorName != null" >
+        #{osOperatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="osDate != null" >
+        #{osDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="osNumber != null" >
+        #{osNumber,jdbcType=INTEGER},
+      </if>
+      <if test="osLeftnumber != null" >
+        #{osLeftnumber,jdbcType=INTEGER},
+      </if>
+      <if test="osMoney != null" >
+        #{osMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="osDestination != null" >
+        #{osDestination,jdbcType=VARCHAR},
+      </if>
+      <if test="osNote != null" >
+        #{osNote,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Outstorage" >
+    update outstorage
+    <set >
+      <if test="osOperatorId != null" >
+        os_operator_id = #{osOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="osOperatorName != null" >
+        os_operator_name = #{osOperatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="osDate != null" >
+        os_date = #{osDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="osNumber != null" >
+        os_number = #{osNumber,jdbcType=INTEGER},
+      </if>
+      <if test="osLeftnumber != null" >
+        os_leftNumber = #{osLeftnumber,jdbcType=INTEGER},
+      </if>
+      <if test="osMoney != null" >
+        os_money = #{osMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="osDestination != null" >
+        os_destination = #{osDestination,jdbcType=VARCHAR},
+      </if>
+      <if test="osNote != null" >
+        os_note = #{osNote,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where os_id = #{osId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Outstorage" >
+    update outstorage
+    set os_operator_id = #{osOperatorId,jdbcType=BIGINT},
+      os_operator_name = #{osOperatorName,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=BIGINT},
+      os_date = #{osDate,jdbcType=TIMESTAMP},
+      os_number = #{osNumber,jdbcType=INTEGER},
+      os_leftNumber = #{osLeftnumber,jdbcType=INTEGER},
+      os_money = #{osMoney,jdbcType=DECIMAL},
+      os_destination = #{osDestination,jdbcType=VARCHAR},
+      os_note = #{osNote,jdbcType=VARCHAR}
+    where os_id = #{osId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.GoodsstockDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Goodsstock" >
+    <id column="gs_id" property="gsId" jdbcType="BIGINT" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+    <result column="gs_address" property="gsAddress" jdbcType="VARCHAR" />
+    <result column="gs_number" property="gsNumber" jdbcType="INTEGER" />
+    <result column="gs_warnNumber" property="gsWarnnumber" jdbcType="INTEGER" />
+    <result column="gs_note" property="gsNote" jdbcType="VARCHAR" />
+    <result column="gs_update_time" property="gsUpdateTime" jdbcType="TIMESTAMP" />
+      <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods" >
+          <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+          <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+          <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+          <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+          <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+          <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+          <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+          <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+          <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+          <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+          <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+          <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+          <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+          <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+          <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+          <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+          <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+          <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+          <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+          <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+      </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    gs_id, goods_id, gs_address, gs_number, gs_warnNumber, gs_note, gs_update_time,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+  </sql>
+    <sql id="fromTable">
+        goodsstock left join goods on goodsstock.goods_id = goods.goods_id
+    </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable"/>
+    where gs_id = #{gsId,jdbcType=BIGINT}
+  </select>
+
+    <select id="selectByGoodsId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from
+        <include refid="fromTable"/>
+        where goodsstock.goods_id = #{goodsId}
+    </select>
+
+    <select id="listGoodsstock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="fromTable"/>
+    </select>
+
+    <select id="listGoodsstockByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="fromTable"/>
+        <where>
+            <if test="goodsName != null and goodsName != ''">
+                and goods.goods_name like concat(concat('%',#{goodsName}),'%')
+            </if>
+            <if test="goodsId != null">
+                and goodsstock.goods_id = #{goodsId}
+            </if>
+            <if test="less != null">
+                and goodsstock.gs_number &gt;= #{less}
+            </if>
+            <if test="more != null">
+                and goodsstock.gs_number &lt;= #{more}
+            </if>
+        </where>
+    </select>
+    <update id="setWarnNum" parameterType="java.lang.Long">
+        update goodsstock
+        set gs_warnNumber = #{warnNumber},
+            gs_update_time = #{gsUpdateTime}
+        where goods_id = #{goodsId}
+    </update>
+
+    <!-- 查询处于预警的商品 -->
+    <select id="listUnderWarning" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from
+        <include refid="fromTable"/>
+        where goodsstock.gs_number between 0 and goodsstock.gs_warnNumber
+    </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goodsstock
+    where gs_id = #{gsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Goodsstock" >
+    insert into goodsstock (gs_id, goods_id, gs_address, 
+      gs_number, gs_warnNumber, gs_note, 
+      gs_update_time)
+    values (#{gsId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, #{gsAddress,jdbcType=VARCHAR}, 
+      #{gsNumber,jdbcType=INTEGER}, #{gsWarnnumber,jdbcType=INTEGER}, #{gsNote,jdbcType=VARCHAR}, 
+      #{gsUpdateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Goodsstock" >
+    insert into goodsstock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="gsId != null" >
+        gs_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="gsAddress != null" >
+        gs_address,
+      </if>
+      <if test="gsNumber != null" >
+        gs_number,
+      </if>
+      <if test="gsWarnnumber != null" >
+        gs_warnNumber,
+      </if>
+      <if test="gsNote != null" >
+        gs_note,
+      </if>
+      <if test="gsUpdateTime != null" >
+        gs_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="gsId != null" >
+        #{gsId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="gsAddress != null" >
+        #{gsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="gsNumber != null" >
+        #{gsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="gsWarnnumber != null" >
+        #{gsWarnnumber,jdbcType=INTEGER},
+      </if>
+      <if test="gsNote != null" >
+        #{gsNote,jdbcType=VARCHAR},
+      </if>
+      <if test="gsUpdateTime != null" >
+        #{gsUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Goodsstock" >
+    update goodsstock
+    <set >
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="gsAddress != null" >
+        gs_address = #{gsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="gsNumber != null" >
+        gs_number = #{gsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="gsWarnnumber != null" >
+        gs_warnNumber = #{gsWarnnumber,jdbcType=INTEGER},
+      </if>
+      <if test="gsNote != null" >
+        gs_note = #{gsNote,jdbcType=VARCHAR},
+      </if>
+      <if test="gsUpdateTime != null" >
+        gs_update_time = #{gsUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where gs_id = #{gsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Goodsstock" >
+    update goodsstock
+    set goods_id = #{goodsId,jdbcType=BIGINT},
+      gs_address = #{gsAddress,jdbcType=VARCHAR},
+      gs_number = #{gsNumber,jdbcType=INTEGER},
+      gs_warnNumber = #{gsWarnnumber,jdbcType=INTEGER},
+      gs_note = #{gsNote,jdbcType=VARCHAR},
+      gs_update_time = #{gsUpdateTime,jdbcType=TIMESTAMP}
+    where gs_id = #{gsId,jdbcType=BIGINT}
+  </update>
+</mapper>

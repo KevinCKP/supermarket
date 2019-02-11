@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.BuyreturndetailDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Buyreturndetail" >
+    <id column="brd_id" property="brdId" jdbcType="BIGINT" />
+    <result column="brd_goods_id" property="brdGoodsId" jdbcType="BIGINT" />
+    <result column="br_id" property="brId" jdbcType="BIGINT" />
+    <result column="brd_number" property="brdNumber" jdbcType="INTEGER" />
+    <result column="brd_price" property="brdPrice" jdbcType="DECIMAL" />
+    <result column="brd_total" property="brdTotal" jdbcType="DECIMAL" />
+    <result column="brd_reason" property="brdReason" jdbcType="VARCHAR" />
+    <result column="brd_state" property="brdState" jdbcType="TINYINT" />
+    <result column="brd_actual_number" property="brdActualNumber" jdbcType="INTEGER" />
+    <result column="brd_handling_way" property="brdHandlingWay" jdbcType="TINYINT" />
+    <result column="brd_note" property="brdNote" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    brd_id, brd_goods_id, br_id, brd_number, brd_price, brd_total, brd_reason, brd_state, 
+    brd_actual_number, brd_handling_way, brd_note
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from buyreturndetail
+    where brd_id = #{brdId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from buyreturndetail
+    where brd_id = #{brdId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Buyreturndetail" >
+    insert into buyreturndetail (brd_id, brd_goods_id, br_id, 
+      brd_number, brd_price, brd_total, 
+      brd_reason, brd_state, brd_actual_number, 
+      brd_handling_way, brd_note)
+    values (#{brdId,jdbcType=BIGINT}, #{brdGoodsId,jdbcType=BIGINT}, #{brId,jdbcType=BIGINT}, 
+      #{brdNumber,jdbcType=INTEGER}, #{brdPrice,jdbcType=DECIMAL}, #{brdTotal,jdbcType=DECIMAL}, 
+      #{brdReason,jdbcType=VARCHAR}, #{brdState,jdbcType=TINYINT}, #{brdActualNumber,jdbcType=INTEGER}, 
+      #{brdHandlingWay,jdbcType=TINYINT}, #{brdNote,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Buyreturndetail" >
+    insert into buyreturndetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="brdId != null" >
+        brd_id,
+      </if>
+      <if test="brdGoodsId != null" >
+        brd_goods_id,
+      </if>
+      <if test="brId != null" >
+        br_id,
+      </if>
+      <if test="brdNumber != null" >
+        brd_number,
+      </if>
+      <if test="brdPrice != null" >
+        brd_price,
+      </if>
+      <if test="brdTotal != null" >
+        brd_total,
+      </if>
+      <if test="brdReason != null" >
+        brd_reason,
+      </if>
+      <if test="brdState != null" >
+        brd_state,
+      </if>
+      <if test="brdActualNumber != null" >
+        brd_actual_number,
+      </if>
+      <if test="brdHandlingWay != null" >
+        brd_handling_way,
+      </if>
+      <if test="brdNote != null" >
+        brd_note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="brdId != null" >
+        #{brdId,jdbcType=BIGINT},
+      </if>
+      <if test="brdGoodsId != null" >
+        #{brdGoodsId,jdbcType=BIGINT},
+      </if>
+      <if test="brId != null" >
+        #{brId,jdbcType=BIGINT},
+      </if>
+      <if test="brdNumber != null" >
+        #{brdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="brdPrice != null" >
+        #{brdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="brdTotal != null" >
+        #{brdTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="brdReason != null" >
+        #{brdReason,jdbcType=VARCHAR},
+      </if>
+      <if test="brdState != null" >
+        #{brdState,jdbcType=TINYINT},
+      </if>
+      <if test="brdActualNumber != null" >
+        #{brdActualNumber,jdbcType=INTEGER},
+      </if>
+      <if test="brdHandlingWay != null" >
+        #{brdHandlingWay,jdbcType=TINYINT},
+      </if>
+      <if test="brdNote != null" >
+        #{brdNote,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Buyreturndetail" >
+    update buyreturndetail
+    <set >
+      <if test="brdGoodsId != null" >
+        brd_goods_id = #{brdGoodsId,jdbcType=BIGINT},
+      </if>
+      <if test="brId != null" >
+        br_id = #{brId,jdbcType=BIGINT},
+      </if>
+      <if test="brdNumber != null" >
+        brd_number = #{brdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="brdPrice != null" >
+        brd_price = #{brdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="brdTotal != null" >
+        brd_total = #{brdTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="brdReason != null" >
+        brd_reason = #{brdReason,jdbcType=VARCHAR},
+      </if>
+      <if test="brdState != null" >
+        brd_state = #{brdState,jdbcType=TINYINT},
+      </if>
+      <if test="brdActualNumber != null" >
+        brd_actual_number = #{brdActualNumber,jdbcType=INTEGER},
+      </if>
+      <if test="brdHandlingWay != null" >
+        brd_handling_way = #{brdHandlingWay,jdbcType=TINYINT},
+      </if>
+      <if test="brdNote != null" >
+        brd_note = #{brdNote,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where brd_id = #{brdId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Buyreturndetail" >
+    update buyreturndetail
+    set brd_goods_id = #{brdGoodsId,jdbcType=BIGINT},
+      br_id = #{brId,jdbcType=BIGINT},
+      brd_number = #{brdNumber,jdbcType=INTEGER},
+      brd_price = #{brdPrice,jdbcType=DECIMAL},
+      brd_total = #{brdTotal,jdbcType=DECIMAL},
+      brd_reason = #{brdReason,jdbcType=VARCHAR},
+      brd_state = #{brdState,jdbcType=TINYINT},
+      brd_actual_number = #{brdActualNumber,jdbcType=INTEGER},
+      brd_handling_way = #{brdHandlingWay,jdbcType=TINYINT},
+      brd_note = #{brdNote,jdbcType=VARCHAR}
+    where brd_id = #{brdId,jdbcType=BIGINT}
+  </update>
+</mapper>

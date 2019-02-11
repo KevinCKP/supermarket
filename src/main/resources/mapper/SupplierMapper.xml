@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.SupplierDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Supplier" >
+    <id column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="supplier_linkman" property="supplierLinkman" jdbcType="VARCHAR" />
+    <result column="supplier_phone" property="supplierPhone" jdbcType="BIGINT" />
+    <result column="supplier_address" property="supplierAddress" jdbcType="VARCHAR" />
+    <result column="supplier_bank" property="supplierBank" jdbcType="VARCHAR" />
+    <result column="supplier_account" property="supplierAccount" jdbcType="BIGINT" />
+    <result column="supplier_note" property="supplierNote" jdbcType="VARCHAR" />
+    <result column="supplier_create_time" jdbcType="TIMESTAMP" property="supplierCreateTime" />
+    <result column="supplier_update_time" jdbcType="TIMESTAMP" property="supplierUpdateTime" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    supplier_id, supplier_name, supplier_linkman, supplier_phone, supplier_address, supplier_bank, 
+    supplier_account, supplier_note,supplier_create_time,supplier_update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier
+    where supplier_id = #{supplierId,jdbcType=BIGINT}
+  </select>
+  <select id="listSupplier" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from supplier
+  </select>
+  <select id="listByFactors" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from supplier
+    <where>
+      <if test="supplierName != null and supplierName != ''">
+        supplier_name like concat(concat('%',#{supplierName}),'%')
+      </if>
+      <if test="supplierLinkman != null and supplierLinkman != ''">
+        supplier_linkman like concat(concat('%',#{supplierLinkman}),'%')
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(supplier_create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(supplier_create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from supplier
+    where supplier_id = #{supplierId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Supplier" >
+    insert into supplier (supplier_id, supplier_name, supplier_linkman, 
+      supplier_phone, supplier_address, supplier_bank, 
+      supplier_account, supplier_note,supplier_create_time,supplier_update_time)
+    values (#{supplierId,jdbcType=BIGINT}, #{supplierName,jdbcType=VARCHAR}, #{supplierLinkman,jdbcType=VARCHAR}, 
+      #{supplierPhone,jdbcType=BIGINT}, #{supplierAddress,jdbcType=VARCHAR}, #{supplierBank,jdbcType=VARCHAR}, 
+      #{supplierAccount,jdbcType=BIGINT}, #{supplierNote,jdbcType=VARCHAR},
+      #{supplierCreateTime,jdbcType=TIMESTAMP},#{supplierUpdateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Supplier" >
+    insert into supplier
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="supplierName != null" >
+        supplier_name,
+      </if>
+      <if test="supplierLinkman != null" >
+        supplier_linkman,
+      </if>
+      <if test="supplierPhone != null" >
+        supplier_phone,
+      </if>
+      <if test="supplierAddress != null" >
+        supplier_address,
+      </if>
+      <if test="supplierBank != null" >
+        supplier_bank,
+      </if>
+      <if test="supplierAccount != null" >
+        supplier_account,
+      </if>
+      <if test="supplierNote != null" >
+        supplier_note,
+      </if>
+      <if test="supplierCreateTime != null">
+        supplier_create_time
+      </if>
+      <if test="supplierUpdateTime != null">
+        supplier_update_time
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="supplierName != null" >
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierLinkman != null" >
+        #{supplierLinkman,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierPhone != null" >
+        #{supplierPhone,jdbcType=BIGINT},
+      </if>
+      <if test="supplierAddress != null" >
+        #{supplierAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierBank != null" >
+        #{supplierBank,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierAccount != null" >
+        #{supplierAccount,jdbcType=BIGINT},
+      </if>
+      <if test="supplierNote != null" >
+        #{supplierNote,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCreateTime != null">
+        #{supplierCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="supplierUpdateTime != null">
+        #{supplierUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Supplier" >
+    update supplier
+    <set >
+      <if test="supplierName != null" >
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierLinkman != null" >
+        supplier_linkman = #{supplierLinkman,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierPhone != null" >
+        supplier_phone = #{supplierPhone,jdbcType=BIGINT},
+      </if>
+      <if test="supplierAddress != null" >
+        supplier_address = #{supplierAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierBank != null" >
+        supplier_bank = #{supplierBank,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierAccount != null" >
+        supplier_account = #{supplierAccount,jdbcType=BIGINT},
+      </if>
+      <if test="supplierNote != null" >
+        supplier_note = #{supplierNote,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierUpdateTime != null">
+        supplier_update_time = #{supplierUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where supplier_id = #{supplierId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Supplier" >
+    update supplier
+    set supplier_name = #{supplierName,jdbcType=VARCHAR},
+      supplier_linkman = #{supplierLinkman,jdbcType=VARCHAR},
+      supplier_phone = #{supplierPhone,jdbcType=BIGINT},
+      supplier_address = #{supplierAddress,jdbcType=VARCHAR},
+      supplier_bank = #{supplierBank,jdbcType=VARCHAR},
+      supplier_account = #{supplierAccount,jdbcType=BIGINT},
+      supplier_note = #{supplierNote,jdbcType=VARCHAR},
+      supplier_update_time = #{supplierUpdateTime,jdbcType=TIMESTAMP}
+    where supplier_id = #{supplierId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.SaledetailDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Saledetail" >
+    <id column="sd_id" property="sdId" jdbcType="BIGINT" />
+    <result column="sr_id" property="srId" jdbcType="BIGINT" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+    <result column="sd_number" property="sdNumber" jdbcType="INTEGER" />
+    <result column="sd_price" property="sdPrice" jdbcType="DECIMAL" />
+    <result column="sd_total" property="sdTotal" jdbcType="DECIMAL" />
+    <result column="sd_profit" property="sdProfit" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sd_id, sr_id, goods_id, sd_number, sd_price, sd_total, sd_profit
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from saledetail
+    where sd_id = #{sdId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from saledetail
+    where sd_id = #{sdId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSaledetails" parameterType="java.util.List">
+    insert into saledetail (sr_id, goods_id,
+      sd_number, sd_price, sd_total,
+      sd_profit) values
+      <foreach collection="saledetails" item="saledetail" index="index" separator=",">
+        (#{srId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT},
+        #{sdNumber,jdbcType=INTEGER}, #{sdPrice,jdbcType=DECIMAL}, #{sdTotal,jdbcType=DECIMAL},
+        #{sdProfit,jdbcType=DECIMAL})
+      </foreach>
+  </insert>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Saledetail" >
+    insert into saledetail (sd_id, sr_id, goods_id, 
+      sd_number, sd_price, sd_total, 
+      sd_profit)
+    values (#{sdId,jdbcType=BIGINT}, #{srId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, 
+      #{sdNumber,jdbcType=INTEGER}, #{sdPrice,jdbcType=DECIMAL}, #{sdTotal,jdbcType=DECIMAL}, 
+      #{sdProfit,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Saledetail" >
+    insert into saledetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sdId != null" >
+        sd_id,
+      </if>
+      <if test="srId != null" >
+        sr_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="sdNumber != null" >
+        sd_number,
+      </if>
+      <if test="sdPrice != null" >
+        sd_price,
+      </if>
+      <if test="sdTotal != null" >
+        sd_total,
+      </if>
+      <if test="sdProfit != null" >
+        sd_profit,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sdId != null" >
+        #{sdId,jdbcType=BIGINT},
+      </if>
+      <if test="srId != null" >
+        #{srId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="sdNumber != null" >
+        #{sdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="sdPrice != null" >
+        #{sdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sdTotal != null" >
+        #{sdTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="sdProfit != null" >
+        #{sdProfit,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Saledetail" >
+    update saledetail
+    <set >
+      <if test="srId != null" >
+        sr_id = #{srId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="sdNumber != null" >
+        sd_number = #{sdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="sdPrice != null" >
+        sd_price = #{sdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sdTotal != null" >
+        sd_total = #{sdTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="sdProfit != null" >
+        sd_profit = #{sdProfit,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where sd_id = #{sdId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Saledetail" >
+    update saledetail
+    set sr_id = #{srId,jdbcType=BIGINT},
+      goods_id = #{goodsId,jdbcType=BIGINT},
+      sd_number = #{sdNumber,jdbcType=INTEGER},
+      sd_price = #{sdPrice,jdbcType=DECIMAL},
+      sd_total = #{sdTotal,jdbcType=DECIMAL},
+      sd_profit = #{sdProfit,jdbcType=DECIMAL}
+    where sd_id = #{sdId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="goodsProfitCount">
+    select month(salerecord.sr_date), goods.goods_name as goods_name from saledetail left join goods
+    on saledetail.goods_id = goods.goods_id left join salerecord on saledetail.sr_id = salerecord.sr_id
+    and year(salerecord.sr_date) = #{year} group by goods.goods_name
+  </select>
+  <select id="goodsSalesCount">
+    select month(salerecord.sr_date),goods.goods_name as goods_name, sum(saledetail.sd_profit) as
+    profit from saledetail left join goodson saledetail.goods_id = goods.goods_id left join salerecord
+     on saledetail.sr_id = salerecord.sr_id
+    where year(salerecord.sr_date) = #{year} group by goods.goods_name
+  </select>
+  <select id="goodsSaleNumberCount">
+    select month(salerecord.sr_date),goods.goods_name as goods_name, sum(saledetail.sd_number)
+    as saleNumber from saledetail left join goods
+    on saledetail.goods_id = goods.goods_id left join salerecord on saledetail.sr_id = salerecord.sr_id
+    where year(salerecord.sr_date) = year group by goods.goods_name
+  </select>
+
+  <select id="profitCount">
+    select month(salerecord.sr_date) as month, sum(saledetail.sd_profit) as profit
+    from saledetail left join salerecord on saledetail.sr_id = salerecord.sr_id
+    where year(salerecord.sr_date) = #{year} group by month(salerecord.sr_date)
+  </select>
+
+  <!-- 所有商品的销售情况 -->
+  <select id="countAll">
+    select month(salerecord.sr_date) as month, sum(saledetail.sd_total) as total, sum(saledetail.sd_profit)
+    as profit, count(distinct salerecord.sr_id) as orderNumber, sum(saledetail.sd_number) as goodsNumber
+    from saledetail left join salerecord on saledetail.sr_id = salerecord.sr_id
+    where year(salerecord.sr_date) = #{year} group by month(salerecord.sr_date)
+  </select>
+
+  <!-- 某件商品的销售情况 -->
+  <select id="countGoods">
+    select month(salerecord.sr_date) as month, goods.goods_id as goods_id, goods.goods_name as goods_name,
+    sum(saledetail.sd_profit) as profit, sum(saledetail.sd_number) as sd_number, sum(saledetail.sd_total) as
+    total from
+    saledetail left join goods
+    on saledetail.goods_id = goods.goods_id left join salerecord on saledetail.sr_id = salerecord.sr_id
+    where year(salerecord.sr_date) = #{year} and goods.goods_id = #{goodsId} group by month(salerecord.sr_date)
+  </select>
+
+  <select id="countAllGoodsTotal">
+    select month(salerecord.sr_date) as month, goods.goods_id as goods_id, goods.goods_name as goods_name,
+    sum(saledetail.sd_profit) as profit from
+    saledetail left join goods
+    on saledetail.goods_id = goods.goods_id left join salerecord on saledetail.sr_id = salerecord.sr_id
+    where year(salerecord.sr_date) = 2019 group by month(salerecord.sr_date)
+  </select>
+
+
+
+</mapper>

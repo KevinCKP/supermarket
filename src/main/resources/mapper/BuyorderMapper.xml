@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.BuyorderDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Buyorder" >
+    <id column="bo_id" property="boId" jdbcType="BIGINT" />
+    <result column="bo_assessor" property="boAssessor" jdbcType="BIGINT" />
+    <result column="bo_buyer" property="boBuyer" jdbcType="BIGINT" />
+    <result column="bo_buyerName" property="boBuyername" jdbcType="VARCHAR" />
+    <result column="bo_assessorName" property="boAssessorname" jdbcType="VARCHAR" />
+    <result column="bo_total" property="boTotal" jdbcType="DECIMAL" />
+    <result column="bo_date" property="boDate" jdbcType="TIMESTAMP" />
+    <result column="bo_note" property="boNote" jdbcType="VARCHAR" />
+    <result column="bo_state" property="boState" jdbcType="TINYINT" />
+    <result column="bo_isFinished" property="boIsfinished" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <collection property="buydetails" ofType="Buydetail">
+      <id column="bd_id" property="bdId" jdbcType="BIGINT" />
+      <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+      <result column="bo_id" property="boId" jdbcType="BIGINT" />
+      <result column="bd_number" property="bdNumber" jdbcType="INTEGER" />
+      <result column="bd_price" property="bdPrice" jdbcType="DECIMAL" />
+      <result column="bd_total" property="bdTotal" jdbcType="DECIMAL" />
+      <result column="bd_note" property="bdNote" jdbcType="VARCHAR" />
+      <result column="bd_state" property="bdIsfinished" jdbcType="TINYINT" />
+      <result column="bd_in_number" property="bdInNumber" jdbcType="INTEGER"/>
+      <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods" >
+        <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+        <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+        <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+        <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+        <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+        <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+        <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+        <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+        <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+        <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+        <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+        <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+        <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+        <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+        <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+        <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+        <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+        <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+      </association>
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    buyorder.bo_id, buyorder.bo_assessor, buyorder.bo_buyer, buyorder.bo_buyerName, buyorder.bo_assessorName,
+    buyorder.bo_total, buyorder.bo_date, buyorder.bo_note, buyorder.bo_state, buyorder.bo_isFinished, buyorder.create_time,
+    buydetail.bd_id,buydetail.goods_id,buydetail.bo_id,buydetail.bd_number,
+    buydetail.bd_price,buydetail.bd_total,buydetail.bd_note,buydetail.bd_state, buydetail.bd_in_number,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+  </sql>
+  <sql id="fromTable">
+    buyorder left join buydetail on buyorder.bo_id = buydetail.bo_id left join goods on buydetail.goods_id = goods.goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List"/>
+    from <include refid="fromTable" />
+    where buyorder.bo_id = #{boId,jdbcType=BIGINT}
+  </select>
+  <select id="listByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List"/>
+    from <include refid="fromTable"/>
+    <where>
+      <if test="boId != null ">
+        and buyorder.bo_id = #{boId}
+      </if>
+      <if test="srBuyerName != null and buyerName != ''" >
+        and buyorder.bo_buyerName like "%"#{srBuyerName}"%"
+        <!-- and sr_buyerName like concat(concat('%',#{srBuyerName}),'%') -->
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(buyorder.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(buyorder.create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="createTime != null and createTime != ''">
+        <![CDATA[ and DATE_FORMAT(buyorder.create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="boState != null">
+        and buyorder.bo_state = #{boState}
+      </if>
+      <choose>
+        <when test="boIsFinished == null">
+          and buyorder.bo_isFinished is null 
+      </when>
+        <when test="boIsFinished != null">
+          and buyorder.bo_isFinished = #{boIsFinished,jdbcType=BOOLEAN}
+        </when>
+      </choose>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from buyorder
+    where bo_id = #{boId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Buyorder" >
+    insert into buyorder (bo_id, bo_assessor, bo_buyer, 
+      bo_buyerName, bo_assessorName, bo_total, 
+      bo_date, bo_note, bo_state, 
+      bo_isFinished, create_time)
+    values (#{boId,jdbcType=BIGINT}, #{boAssessor,jdbcType=BIGINT}, #{boBuyer,jdbcType=BIGINT}, 
+      #{boBuyername,jdbcType=VARCHAR}, #{boAssessorname,jdbcType=VARCHAR}, #{boTotal,jdbcType=DECIMAL}, 
+      #{boDate,jdbcType=TIMESTAMP}, #{boNote,jdbcType=VARCHAR}, #{boState,jdbcType=TINYINT}, 
+      #{boIsfinished,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Buyorder" >
+    insert into buyorder
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="boId != null" >
+        bo_id,
+      </if>
+      <if test="boAssessor != null" >
+        bo_assessor,
+      </if>
+      <if test="boBuyer != null" >
+        bo_buyer,
+      </if>
+      <if test="boBuyername != null" >
+        bo_buyerName,
+      </if>
+      <if test="boAssessorname != null" >
+        bo_assessorName,
+      </if>
+      <if test="boTotal != null" >
+        bo_total,
+      </if>
+      <if test="boDate != null" >
+        bo_date,
+      </if>
+      <if test="boNote != null" >
+        bo_note,
+      </if>
+      <if test="boState != null" >
+        bo_state,
+      </if>
+      <if test="boIsfinished != null" >
+        bo_isFinished,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="boId != null" >
+        #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="boAssessor != null" >
+        #{boAssessor,jdbcType=BIGINT},
+      </if>
+      <if test="boBuyer != null" >
+        #{boBuyer,jdbcType=BIGINT},
+      </if>
+      <if test="boBuyername != null" >
+        #{boBuyername,jdbcType=VARCHAR},
+      </if>
+      <if test="boAssessorname != null" >
+        #{boAssessorname,jdbcType=VARCHAR},
+      </if>
+      <if test="boTotal != null" >
+        #{boTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="boDate != null" >
+        #{boDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boNote != null" >
+        #{boNote,jdbcType=VARCHAR},
+      </if>
+      <if test="boState != null" >
+        #{boState,jdbcType=TINYINT},
+      </if>
+      <if test="boIsfinished != null" >
+        #{boIsfinished,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Buyorder" >
+    update buyorder
+    <set >
+      <if test="boAssessor != null" >
+        bo_assessor = #{boAssessor,jdbcType=BIGINT},
+      </if>
+      <if test="boBuyer != null" >
+        bo_buyer = #{boBuyer,jdbcType=BIGINT},
+      </if>
+      <if test="boBuyername != null" >
+        bo_buyerName = #{boBuyername,jdbcType=VARCHAR},
+      </if>
+      <if test="boAssessorname != null" >
+        bo_assessorName = #{boAssessorname,jdbcType=VARCHAR},
+      </if>
+      <if test="boTotal != null" >
+        bo_total = #{boTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="boDate != null" >
+        bo_date = #{boDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boNote != null" >
+        bo_note = #{boNote,jdbcType=VARCHAR},
+      </if>
+      <if test="boState != null" >
+        bo_state = #{boState,jdbcType=TINYINT},
+      </if>
+      <if test="boIsfinished != null" >
+        bo_isFinished = #{boIsfinished,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where bo_id = #{boId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Buyorder" >
+    update buyorder
+    set bo_assessor = #{boAssessor,jdbcType=BIGINT},
+      bo_buyer = #{boBuyer,jdbcType=BIGINT},
+      bo_buyerName = #{boBuyername,jdbcType=VARCHAR},
+      bo_assessorName = #{boAssessorname,jdbcType=VARCHAR},
+      bo_total = #{boTotal,jdbcType=DECIMAL},
+      bo_date = #{boDate,jdbcType=TIMESTAMP},
+      bo_note = #{boNote,jdbcType=VARCHAR},
+      bo_state = #{boState,jdbcType=TINYINT},
+      bo_isFinished = #{boIsfinished,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where bo_id = #{boId,jdbcType=BIGINT}
+  </update>
+</mapper>

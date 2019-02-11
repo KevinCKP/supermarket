@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.BuydetailDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Buydetail" >
+    <id column="bd_id" property="bdId" jdbcType="BIGINT" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+    <result column="bo_id" property="boId" jdbcType="BIGINT" />
+    <result column="bd_number" property="bdNumber" jdbcType="INTEGER" />
+    <result column="bd_price" property="bdPrice" jdbcType="DECIMAL" />
+    <result column="bd_total" property="bdTotal" jdbcType="DECIMAL" />
+    <result column="bd_note" property="bdNote" jdbcType="VARCHAR" />
+    <result column="bd_state" property="bdIsfinished" jdbcType="TINYINT" />
+    <result column="bd_in_number" property="bdInNumber" jdbcType="INTEGER"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bd_id, goods_id, bo_id, bd_number, bd_price, bd_total, bd_note, bd_state, bd_in_number
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from buydetail
+    where bd_id = #{bdId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from buydetail
+    where bd_id = #{bdId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertAllBuydetails" parameterType="java.util.ArrayList">
+    insert into buydetail (goods_id, bo_id,
+      bd_number, bd_price, bd_total,
+      bd_note, bd_state) values
+      <foreach collection="buydetails" item="buydetail" index="index" separator=",">
+        (#{buydetail.goodsId},#{buydetail.boId},#{buydetail.bdNumber},#{buydetail.bdPrice},
+        #{buydetail.total},#{buydetail.bdNote},#{buydetail.bdState})
+      </foreach>
+  </insert>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Buydetail" >
+    insert into buydetail (bd_id, goods_id, bo_id, 
+      bd_number, bd_price, bd_total, 
+      bd_note, bd_state)
+    values (#{bdId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, #{boId,jdbcType=BIGINT}, 
+      #{bdNumber,jdbcType=INTEGER}, #{bdPrice,jdbcType=DECIMAL}, #{bdTotal,jdbcType=DECIMAL}, 
+      #{bdNote,jdbcType=VARCHAR}, #{bdState,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Buydetail" >
+    insert into buydetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bdId != null" >
+        bd_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="boId != null" >
+        bo_id,
+      </if>
+      <if test="bdNumber != null" >
+        bd_number,
+      </if>
+      <if test="bdPrice != null" >
+        bd_price,
+      </if>
+      <if test="bdTotal != null" >
+        bd_total,
+      </if>
+      <if test="bdNote != null" >
+        bd_note,
+      </if>
+      <if test="bdState != null" >
+        bd_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bdId != null" >
+        #{bdId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="boId != null" >
+        #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="bdNumber != null" >
+        #{bdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="bdPrice != null" >
+        #{bdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="bdTotal != null" >
+        #{bdTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="bdNote != null" >
+        #{bdNote,jdbcType=VARCHAR},
+      </if>
+      <if test="bdState != null" >
+        #{bdState,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Buydetail" >
+    update buydetail
+    <set >
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="boId != null" >
+        bo_id = #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="bdNumber != null" >
+        bd_number = #{bdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="bdPrice != null" >
+        bd_price = #{bdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="bdTotal != null" >
+        bd_total = #{bdTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="bdNote != null" >
+        bd_note = #{bdNote,jdbcType=VARCHAR},
+      </if>
+      <if test="bdState != null" >
+        bd_state = #{bdState,jdbcType=TINYINT},
+      </if>
+    </set>
+    where bd_id = #{bdId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Buydetail" >
+    update buydetail
+    set goods_id = #{goodsId,jdbcType=BIGINT},
+      bo_id = #{boId,jdbcType=BIGINT},
+      bd_number = #{bdNumber,jdbcType=INTEGER},
+      bd_price = #{bdPrice,jdbcType=DECIMAL},
+      bd_total = #{bdTotal,jdbcType=DECIMAL},
+      bd_note = #{bdNote,jdbcType=VARCHAR},
+      bd_state = #{bdState,jdbcType=TINYINT}
+    where bd_id = #{bdId,jdbcType=BIGINT}
+  </update>
+</mapper>

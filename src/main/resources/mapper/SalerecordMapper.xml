@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.SalerecordDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Salerecord" >
+    <id column="sr_id" property="srId" jdbcType="BIGINT" />
+    <result column="staff_id" property="staffId" jdbcType="BIGINT" />
+    <result column="member_id" property="memberId" jdbcType="BIGINT" />
+    <result column="sr_total" property="srTotal" jdbcType="DECIMAL" />
+    <result column="sr_actualCharge" property="srActualcharge" jdbcType="DECIMAL" />
+    <result column="sr_change" property="srChange" jdbcType="DECIMAL" />
+    <result column="sr_date" property="srDate" jdbcType="TIMESTAMP" />
+    <result column="staff_note" property="staffNote" jdbcType="VARCHAR" />
+    <result column="sr_profit" property="srProfit" jdbcType="DECIMAL" />
+    <result column="sr_salesman" property="srSalesman" jdbcType="VARCHAR" />
+    <result column="sr_number" property="srNumber" jdbcType="INTEGER" />
+      <collection property="saledetails" ofType="com.scau.kevin.supermarket.entity.Saledetail">
+          <id column="sd_id" property="sdId" jdbcType="BIGINT" />
+          <result column="sr_id" property="srId" jdbcType="BIGINT" />
+          <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+          <result column="sd_number" property="sdNumber" jdbcType="INTEGER" />
+          <result column="sd_price" property="sdPrice" jdbcType="DECIMAL" />
+          <result column="sd_total" property="sdTotal" jdbcType="DECIMAL" />
+          <result column="sd_profit" property="sdProfit" jdbcType="DECIMAL" />
+          <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods">
+              <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+              <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+              <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+              <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+              <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+              <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+              <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+              <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+              <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+              <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+              <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+              <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+              <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+              <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+              <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+              <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+              <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+              <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+          </association>
+      </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    salerecord.sr_id, salerecord.staff_id, salerecord.member_id, salerecord.sr_total,
+    salerecord.sr_actualCharge, salerecord.sr_change, salerecord.sr_date, salerecord.staff_note,
+    salerecord.sr_profit, salerecord.sr_salesman, salerecord.sr_number,
+    saledetail.sd_id, saledetail.sr_id, saledetail.goods_id, saledetail.sd_number, saledetail.sd_price,
+    saledetail.sd_total, saledetail.sd_profit,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+  </sql>
+    <sql id="fromTable">
+        salerecord left join saledetail on salerecord.sr_id = saledetail.sr_id left join goods
+        on saledetail.goods_id = goods.goods_id
+    </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from <include refid="fromTable"/>
+    where sr_id = #{srId,jdbcType=BIGINT}
+  </select>
+
+  <!--  按条件查询 -->
+  <select id="listByFactors" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    select
+    <include refid="Base_Column_List" />
+    from <include refid="fromTable"/>
+    <where>
+      <if test="staffId != null">
+        and staff_id = #{staffId}
+      </if>
+      <if test="srSalesman != null and srSalesman != ''" >
+        and salerecord.sr_salesname like "%"#{salesman}"%"
+        <!-- and sr_buyerName like concat(concat('%',#{srBuyerName}),'%') -->
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(salerecord.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(salerecord.create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="createTime != null and createTime != ''">
+        <![CDATA[ and DATE_FORMAT(salerecord.create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="goodsName != null and goodsName != ''">
+        and goods.goods_name = #{goodsName}
+      </if>
+    </where>
+  </select>
+  <!-- 查询全部，用于进入界面的查询 -->
+  <select id="listSalerecords" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from salerecord
+    where sr_id = #{srId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Salerecord" >
+    insert into salerecord (sr_id, staff_id, member_id, 
+      sr_total, sr_actualCharge, sr_change, 
+      sr_date, staff_note, sr_profit, 
+      sr_salesman, sr_number)
+    values (#{srId,jdbcType=BIGINT}, #{staffId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, 
+      #{srTotal,jdbcType=DECIMAL}, #{srActualcharge,jdbcType=DECIMAL}, #{srChange,jdbcType=DECIMAL}, 
+      #{srDate,jdbcType=TIMESTAMP}, #{staffNote,jdbcType=VARCHAR}, #{srProfit,jdbcType=DECIMAL}, 
+      #{srSalesman,jdbcType=VARCHAR}, #{srNumber,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Salerecord" >
+    insert into salerecord
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="srId != null" >
+        sr_id,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="srTotal != null" >
+        sr_total,
+      </if>
+      <if test="srActualcharge != null" >
+        sr_actualCharge,
+      </if>
+      <if test="srChange != null" >
+        sr_change,
+      </if>
+      <if test="srDate != null" >
+        sr_date,
+      </if>
+      <if test="staffNote != null" >
+        staff_note,
+      </if>
+      <if test="srProfit != null" >
+        sr_profit,
+      </if>
+      <if test="srSalesman != null" >
+        sr_salesman,
+      </if>
+      <if test="srNumber != null" >
+        sr_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="srId != null" >
+        #{srId,jdbcType=BIGINT},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=BIGINT},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="srTotal != null" >
+        #{srTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="srActualcharge != null" >
+        #{srActualcharge,jdbcType=DECIMAL},
+      </if>
+      <if test="srChange != null" >
+        #{srChange,jdbcType=DECIMAL},
+      </if>
+      <if test="srDate != null" >
+        #{srDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staffNote != null" >
+        #{staffNote,jdbcType=VARCHAR},
+      </if>
+      <if test="srProfit != null" >
+        #{srProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="srSalesman != null" >
+        #{srSalesman,jdbcType=VARCHAR},
+      </if>
+      <if test="srNumber != null" >
+        #{srNumber,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Salerecord" >
+    update salerecord
+    <set >
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=BIGINT},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="srTotal != null" >
+        sr_total = #{srTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="srActualcharge != null" >
+        sr_actualCharge = #{srActualcharge,jdbcType=DECIMAL},
+      </if>
+      <if test="srChange != null" >
+        sr_change = #{srChange,jdbcType=DECIMAL},
+      </if>
+      <if test="srDate != null" >
+        sr_date = #{srDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staffNote != null" >
+        staff_note = #{staffNote,jdbcType=VARCHAR},
+      </if>
+      <if test="srProfit != null" >
+        sr_profit = #{srProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="srSalesman != null" >
+        sr_salesman = #{srSalesman,jdbcType=VARCHAR},
+      </if>
+      <if test="srNumber != null" >
+        sr_number = #{srNumber,jdbcType=INTEGER},
+      </if>
+    </set>
+    where sr_id = #{srId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Salerecord" >
+    update salerecord
+    set staff_id = #{staffId,jdbcType=BIGINT},
+      member_id = #{memberId,jdbcType=BIGINT},
+      sr_total = #{srTotal,jdbcType=DECIMAL},
+      sr_actualCharge = #{srActualcharge,jdbcType=DECIMAL},
+      sr_change = #{srChange,jdbcType=DECIMAL},
+      sr_date = #{srDate,jdbcType=TIMESTAMP},
+      staff_note = #{staffNote,jdbcType=VARCHAR},
+      sr_profit = #{srProfit,jdbcType=DECIMAL},
+      sr_salesman = #{srSalesman,jdbcType=VARCHAR},
+      sr_number = #{srNumber,jdbcType=INTEGER}
+    where sr_id = #{srId,jdbcType=BIGINT}
+  </update>
+</mapper>

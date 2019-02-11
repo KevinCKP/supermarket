@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.ScrapDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Scrap" >
+    <id column="scrap_id" property="scrapId" jdbcType="BIGINT" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+    <result column="staff_id" property="staffId" jdbcType="BIGINT" />
+    <result column="scrap_time" property="scrapTime" jdbcType="TIMESTAMP" />
+    <result column="scrap_price" property="scrapPrice" jdbcType="DECIMAL" />
+    <result column="scrap_number" property="scrapNumber" jdbcType="INTEGER" />
+    <result column="scrap_total" property="scrapTotal" jdbcType="DECIMAL" />
+    <result column="scrap_reason" property="scrapReason" jdbcType="VARCHAR" />
+    <result column="scrap_note" property="scrapNote" jdbcType="VARCHAR" />
+    <result column="staff_name" property="staffName" jdbcType="VARCHAR" />
+    <result column="scrap_state" property="scrapState" jdbcType="TINYINT" />
+    <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods" >
+      <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+      <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+      <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+      <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+      <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+      <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+      <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+      <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+      <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+      <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+      <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+      <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+      <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+      <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+      <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+      <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+      <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+      <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+      <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+      <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    scrap.scrap_id, scrap.goods_id, scrap.staff_id, scrap.scrap_time, scrap.scrap_price,scrap.scrap_number,
+    scrap.scrap_total, scrap.scrap_reason, scrap.scrap_note, scrap.staff_name,scrap.scrap_state,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture,
+    goods.goods_create_time
+  </sql>
+  <sql id="fromTable">
+    scrap left join goods on scrap.goods_id = goods.goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable" />
+    where scrap_id = #{scrapId,jdbcType=BIGINT}
+  </select>
+
+  <select id="listScrap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable" />
+  </select>
+
+  <select id="listByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable" />
+    <where>
+      <if test="staffName != null and staffName != ''">
+        and scrap.staff_name = #{staffName}
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(scrap.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(scrap.create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="goodsId != null">
+        and scrap.goods_id = #{goodsId}
+      </if>
+      <if test="goodsName != null and goodsName != ''">
+        and goods.goods_name = #{goodsName}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from scrap
+    where scrap_id = #{scrapId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Scrap" >
+    insert into scrap (scrap_id, goods_id, staff_id, 
+      scrap_time, scrap_price, scrap_number, 
+      scrap_total, scrap_reason, scrap_note, 
+      staff_name, scrap_state)
+    values (#{scrapId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, #{staffId,jdbcType=BIGINT}, 
+      #{scrapTime,jdbcType=TIMESTAMP}, #{scrapPrice,jdbcType=DECIMAL}, #{scrapNumber,jdbcType=INTEGER}, 
+      #{scrapTotal,jdbcType=DECIMAL}, #{scrapReason,jdbcType=VARCHAR}, #{scrapNote,jdbcType=VARCHAR}, 
+      #{staffName,jdbcType=VARCHAR}, #{scrapState,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Scrap" >
+    insert into scrap
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="scrapId != null" >
+        scrap_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="scrapTime != null" >
+        scrap_time,
+      </if>
+      <if test="scrapPrice != null" >
+        scrap_price,
+      </if>
+      <if test="scrapNumber != null" >
+        scrap_number,
+      </if>
+      <if test="scrapTotal != null" >
+        scrap_total,
+      </if>
+      <if test="scrapReason != null" >
+        scrap_reason,
+      </if>
+      <if test="scrapNote != null" >
+        scrap_note,
+      </if>
+      <if test="staffName != null" >
+        staff_name,
+      </if>
+      <if test="scrapState != null" >
+        scrap_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="scrapId != null" >
+        #{scrapId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=BIGINT},
+      </if>
+      <if test="scrapTime != null" >
+        #{scrapTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scrapPrice != null" >
+        #{scrapPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="scrapNumber != null" >
+        #{scrapNumber,jdbcType=INTEGER},
+      </if>
+      <if test="scrapTotal != null" >
+        #{scrapTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="scrapReason != null" >
+        #{scrapReason,jdbcType=VARCHAR},
+      </if>
+      <if test="scrapNote != null" >
+        #{scrapNote,jdbcType=VARCHAR},
+      </if>
+      <if test="staffName != null" >
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="scrapState != null" >
+        #{scrapState,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Scrap" >
+    update scrap
+    <set >
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=BIGINT},
+      </if>
+      <if test="scrapTime != null" >
+        scrap_time = #{scrapTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scrapPrice != null" >
+        scrap_price = #{scrapPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="scrapNumber != null" >
+        scrap_number = #{scrapNumber,jdbcType=INTEGER},
+      </if>
+      <if test="scrapTotal != null" >
+        scrap_total = #{scrapTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="scrapReason != null" >
+        scrap_reason = #{scrapReason,jdbcType=VARCHAR},
+      </if>
+      <if test="scrapNote != null" >
+        scrap_note = #{scrapNote,jdbcType=VARCHAR},
+      </if>
+      <if test="staffName != null" >
+        staff_name = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="scrapState != null" >
+        scrap_state = #{scrapState,jdbcType=TINYINT},
+      </if>
+    </set>
+    where scrap_id = #{scrapId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Scrap" >
+    update scrap
+    set goods_id = #{goodsId,jdbcType=BIGINT},
+      staff_id = #{staffId,jdbcType=BIGINT},
+      scrap_time = #{scrapTime,jdbcType=TIMESTAMP},
+      scrap_price = #{scrapPrice,jdbcType=DECIMAL},
+      scrap_number = #{scrapNumber,jdbcType=INTEGER},
+      scrap_total = #{scrapTotal,jdbcType=DECIMAL},
+      scrap_reason = #{scrapReason,jdbcType=VARCHAR},
+      scrap_note = #{scrapNote,jdbcType=VARCHAR},
+      staff_name = #{staffName,jdbcType=VARCHAR},
+      scrap_state = #{scrapState,jdbcType=TINYINT}
+    where scrap_id = #{scrapId,jdbcType=BIGINT}
+  </update>
+
+  <update id="changeState">
+    update scrap
+    set scrap_state = #{scrapState,jdbcType=TINYINT}
+    where scrap_id = #{scrapId,jdbcType=BIGINT}
+  </update>
+</mapper>

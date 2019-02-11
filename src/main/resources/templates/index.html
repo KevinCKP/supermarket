@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{js/login/loginAction.js}"></script>
+    <meta charset="UTF-8">
+    <title>超市管理系统</title>
+
+
+    <link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'>
+
+    <link rel='stylesheet' href='../css/style.css' type='text/css'>
+
+
+
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <form id="loginForm" class="form-signin">
+        <h2 class="form-signin-heading">登录</h2>
+        <input type="text" class="form-control" name="username" id="username" placeholder="员工编号" required="账号不能为空" autofocus="" />
+        <input type="password" class="form-control" name="password" id="password" placeholder="密码" required="密码不能为空"/>
+        <label class="checkbox">
+            <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> 记住我
+        </label>
+        <button id="loginBtn" class="btn btn-lg btn-primary btn-block" type="button">登录</button>
+        <button class="btn btn-lg btn-primary btn-block" type="reset">重置</button>
+    </form>
+</div>
+
+</body>
+
+</html>

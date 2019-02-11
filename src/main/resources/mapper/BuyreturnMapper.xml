@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.scau.kevin.supermarket.dao.BuyreturnDao" >
+  <resultMap id="BaseResultMap" type="com.scau.kevin.supermarket.entity.Buyreturn" >
+    <id column="br_id" property="brId" jdbcType="BIGINT" />
+    <result column="br_operator_id" property="brOperatorId" jdbcType="BIGINT" />
+    <result column="br_supplier_id" property="brSupplierId" jdbcType="BIGINT" />
+    <result column="br_total" property="brTotal" jdbcType="DECIMAL" />
+    <result column="br_create_time" property="brCreateTime" jdbcType="TIMESTAMP" />
+    <result column="br_handle_date" property="brHandleDate" jdbcType="TIMESTAMP" />
+    <result column="br_password" property="brPassword" jdbcType="VARCHAR" />
+    <result column="br_note" property="brNote" jdbcType="VARCHAR" />
+    <result column="br_state" property="brState" jdbcType="TINYINT" />
+    <result column="br_operator_name" property="brOperatorName" jdbcType="VARCHAR" />
+    <result column="br_supplier_name" property="brSupplierName" jdbcType="VARCHAR" />
+    <collection property="buyreturndetails" ofType="Buydetail">
+      <id column="brd_id" property="brdId" jdbcType="BIGINT" />
+      <result column="brd_goods_id" property="brdGoodsId" jdbcType="BIGINT" />
+      <result column="br_id" property="brId" jdbcType="BIGINT" />
+      <result column="brd_number" property="brdNumber" jdbcType="INTEGER" />
+      <result column="brd_price" property="brdPrice" jdbcType="DECIMAL" />
+      <result column="brd_total" property="brdTotal" jdbcType="DECIMAL" />
+      <result column="brd_reason" property="brdReason" jdbcType="VARCHAR" />
+      <result column="brd_state" property="brdState" jdbcType="TINYINT" />
+      <result column="brd_actual_number" property="brdActualNumber" jdbcType="INTEGER" />
+      <result column="brd_handling_way" property="brdHandlingWay" jdbcType="TINYINT" />
+      <result column="brd_note" property="brdNote" jdbcType="VARCHAR" />
+      <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods" >
+        <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
+        <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+        <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="goods_barcode" property="goodsBarcode" jdbcType="VARCHAR" />
+        <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DECIMAL" />
+        <result column="goods_specification" property="goodsSpecification" jdbcType="VARCHAR" />
+        <result column="goods_metricUnit" property="goodsMetricunit" jdbcType="VARCHAR" />
+        <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DECIMAL" />
+        <result column="goods_memPrice" property="goodsMemprice" jdbcType="DECIMAL" />
+        <result column="goods_destination" property="goodsDestination" jdbcType="VARCHAR" />
+        <result column="goods_producePlace" property="goodsProduceplace" jdbcType="VARCHAR" />
+        <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+        <result column="goods_supplier" property="goodsSupplier" jdbcType="VARCHAR" />
+        <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+        <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+        <result column="goods_picture" property="goodsPicture" jdbcType="VARCHAR" />
+        <result column="goods_create_time" property="goodsCreateTime" jdbcType="TIMESTAMP" />
+        <result column="goods_update_time" jdbcType="TIMESTAMP" property="goodsUpdateTime" />
+        <result column="goods_state" jdbcType="TINYINT" property="goodsState" />
+      </association>
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    buyreturn.br_id, buyreturn.br_operator_id, buyreturn.br_supplier_id, buyreturn.br_total,
+    buyreturn.br_create_time, buyreturn.br_handle_date, buyreturn.br_password, buyreturn.br_note,
+    buyreturn.br_state, buyreturn.br_operator_name, buyreturn.br_supplier_name,
+    buyreturndetail.brd_id, buyreturndetail.brd_goods_id, buyreturndetail.br_id, buyreturndetail.brd_number,
+    buyreturndetail.brd_price, buyreturndetail.brd_total, buyreturndetail.brd_reason, buyreturndetail.brd_state,
+    buyreturndetail.brd_actual_number, buyreturndetail.brd_handling_way, buyreturndetail.brd_note,
+    goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
+    goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
+    goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+  </sql>
+  <sql id="fromTable">
+    buyreturn left join buyreturndetail on buyreturn.br_id = buyreturndetail.brd_id left join goods on
+    buyreturndetail.brd_goods_id = goods.goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from
+    <include refid="fromTable"/>
+    where br_id = #{brId,jdbcType=BIGINT}
+  </select>
+  <select id="listBuyreturn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    <include refid="fromTable"/>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from buyreturn
+    where br_id = #{brId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Buyreturn" >
+    insert into buyreturn (br_id, br_operator_id, br_supplier_id, 
+      br_total, br_create_time, br_handle_date, 
+      br_password, br_note, br_state, 
+      br_operator_name, br_supplier_name)
+    values (#{brId,jdbcType=BIGINT}, #{brOperatorId,jdbcType=BIGINT}, #{brSupplierId,jdbcType=BIGINT}, 
+      #{brTotal,jdbcType=DECIMAL}, #{brCreateTime,jdbcType=TIMESTAMP}, #{brHandleDate,jdbcType=TIMESTAMP}, 
+      #{brPassword,jdbcType=VARCHAR}, #{brNote,jdbcType=VARCHAR}, #{brState,jdbcType=TINYINT}, 
+      #{brOperatorName,jdbcType=VARCHAR}, #{brSupplierName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scau.kevin.supermarket.entity.Buyreturn" >
+    insert into buyreturn
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="brId != null" >
+        br_id,
+      </if>
+      <if test="brOperatorId != null" >
+        br_operator_id,
+      </if>
+      <if test="brSupplierId != null" >
+        br_supplier_id,
+      </if>
+      <if test="brTotal != null" >
+        br_total,
+      </if>
+      <if test="brCreateTime != null" >
+        br_create_time,
+      </if>
+      <if test="brHandleDate != null" >
+        br_handle_date,
+      </if>
+      <if test="brPassword != null" >
+        br_password,
+      </if>
+      <if test="brNote != null" >
+        br_note,
+      </if>
+      <if test="brState != null" >
+        br_state,
+      </if>
+      <if test="brOperatorName != null" >
+        br_operator_name,
+      </if>
+      <if test="brSupplierName != null" >
+        br_supplier_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="brId != null" >
+        #{brId,jdbcType=BIGINT},
+      </if>
+      <if test="brOperatorId != null" >
+        #{brOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="brSupplierId != null" >
+        #{brSupplierId,jdbcType=BIGINT},
+      </if>
+      <if test="brTotal != null" >
+        #{brTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="brCreateTime != null" >
+        #{brCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brHandleDate != null" >
+        #{brHandleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brPassword != null" >
+        #{brPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="brNote != null" >
+        #{brNote,jdbcType=VARCHAR},
+      </if>
+      <if test="brState != null" >
+        #{brState,jdbcType=TINYINT},
+      </if>
+      <if test="brOperatorName != null" >
+        #{brOperatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="brSupplierName != null" >
+        #{brSupplierName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Buyreturn" >
+    update buyreturn
+    <set >
+      <if test="brOperatorId != null" >
+        br_operator_id = #{brOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="brSupplierId != null" >
+        br_supplier_id = #{brSupplierId,jdbcType=BIGINT},
+      </if>
+      <if test="brTotal != null" >
+        br_total = #{brTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="brCreateTime != null" >
+        br_create_time = #{brCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brHandleDate != null" >
+        br_handle_date = #{brHandleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brPassword != null" >
+        br_password = #{brPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="brNote != null" >
+        br_note = #{brNote,jdbcType=VARCHAR},
+      </if>
+      <if test="brState != null" >
+        br_state = #{brState,jdbcType=TINYINT},
+      </if>
+      <if test="brOperatorName != null" >
+        br_operator_name = #{brOperatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="brSupplierName != null" >
+        br_supplier_name = #{brSupplierName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where br_id = #{brId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scau.kevin.supermarket.entity.Buyreturn" >
+    update buyreturn
+    set br_operator_id = #{brOperatorId,jdbcType=BIGINT},
+      br_supplier_id = #{brSupplierId,jdbcType=BIGINT},
+      br_total = #{brTotal,jdbcType=DECIMAL},
+      br_create_time = #{brCreateTime,jdbcType=TIMESTAMP},
+      br_handle_date = #{brHandleDate,jdbcType=TIMESTAMP},
+      br_password = #{brPassword,jdbcType=VARCHAR},
+      br_note = #{brNote,jdbcType=VARCHAR},
+      br_state = #{brState,jdbcType=TINYINT},
+      br_operator_name = #{brOperatorName,jdbcType=VARCHAR},
+      br_supplier_name = #{brSupplierName,jdbcType=VARCHAR}
+    where br_id = #{brId,jdbcType=BIGINT}
+  </update>
+</mapper>
