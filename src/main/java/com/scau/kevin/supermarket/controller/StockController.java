@@ -75,7 +75,26 @@ public class StockController {
     @ResponseBody
     public Result<PageInfo> queryWarningGoods(int pageNum, int pageSize, String orderby){
         PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Goodsstock> goodsstockList = goodsstockService.listSetWarning();
+        PageInfo<Goodsstock> goodsstockPageInfo = new PageInfo<>(goodsstockList);
+        return Result.success(goodsstockPageInfo);
+    }
+
+    // 查看处于预警下的商品
+    @RequestMapping("/underwarning/to_list")
+    @ResponseBody
+    public Result<PageInfo> queryUnderWarningGoods(int pageNum, int pageSize, String orderby){
+        PageHelper.startPage(pageNum,pageSize,orderby);
         List<Goodsstock> goodsstockList = goodsstockService.listUnderWarning();
+        PageInfo<Goodsstock> goodsstockPageInfo = new PageInfo<>(goodsstockList);
+        return Result.success(goodsstockPageInfo);
+    }
+
+    @RequestMapping("/uponwarning/to_list")
+    @ResponseBody
+    public Result<PageInfo> queryUponWarningGoods(int pageNum, int pageSize, String orderby){
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Goodsstock> goodsstockList = goodsstockService.listUponWarning();
         PageInfo<Goodsstock> goodsstockPageInfo = new PageInfo<>(goodsstockList);
         return Result.success(goodsstockPageInfo);
     }
@@ -119,7 +138,7 @@ public class StockController {
     }
 
     // 出库纪录查询
-    @RequestMapping("/outstock/to_list")
+    @RequestMapping("/outStock/to_list")
     @ResponseBody
     public Result<PageInfo> outStockToList(int pageNum, int pageSize, String orderby){
         PageHelper.startPage(pageNum,pageSize,orderby);
@@ -141,7 +160,7 @@ public class StockController {
      * @param destination
      * @return
      */
-    @RequestMapping("/outstock/to_list2")
+    @RequestMapping("/outStock/to_list2")
     @ResponseBody
     public Result<PageInfo> outStockToListByFactors(int pageNum, int pageSize, String orderby, String operatorName,
                                                     Long goodsId, String goodsName, String beginTime,
@@ -202,5 +221,14 @@ public class StockController {
     public Result<Scrap> update(Scrap scrap){
         scrapService.updateScrap(scrap);
         return null;
+    }
+
+    @RequestMapping("/warn/update")
+    @ResponseBody
+    public boolean updateWarn(Long goodsId, Integer gsWarnNumber){
+        System.out.println(goodsId);
+        System.out.println(gsWarnNumber);
+        goodsstockService.updateWarnNumber(goodsId,gsWarnNumber);
+        return true;
     }
 }

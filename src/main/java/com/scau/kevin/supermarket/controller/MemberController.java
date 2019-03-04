@@ -7,6 +7,7 @@ import com.scau.kevin.supermarket.result.Result;
 import com.scau.kevin.supermarket.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,7 +19,6 @@ import java.util.List;
  * @Version 1.0
  */
 @Controller
-@ResponseBody
 @RequestMapping("/member")
 public class MemberController {
     @Autowired
@@ -26,6 +26,7 @@ public class MemberController {
 
     //添加会员信息
     @RequestMapping("/add")
+    @ResponseBody
     public Result<Member> insertMember(Member member){
         memberService.insertMember(member);
         return Result.success(member);
@@ -33,24 +34,27 @@ public class MemberController {
 
     // 修改会员信息
     @RequestMapping("/update")
+    @ResponseBody
     public Result<Member> updateMember(Member member){
         memberService.updateMember(member);
         return Result.success(null);
     }
 
     //删除会员信息
-    @RequestMapping("/delete")
-    public Result<Object> deleteMember(Long MemberId){
-        memberService.deleteMember(MemberId);
+    @RequestMapping("/delete/{memberId}")
+    @ResponseBody
+    public Result<Object> deleteMember(@PathVariable("memberId") Long memberId){
+        memberService.deleteMember(memberId);
         return Result.success(true);
     }
     //查询会员信息
     @RequestMapping("/to_list")
-    public Result<Object> toList(int pageNum, int pageSize, String orderby){
+    @ResponseBody
+    public Result<PageInfo> toList(int pageNum, int pageSize, String orderby){
         PageHelper.startPage(pageNum,pageSize,orderby);
         List<Member> members = memberService.listMembers();
-        PageInfo<Member> pageInfo = new PageInfo<>(members);
-        return Result.success(pageInfo);
+        PageInfo<Member> memberPageInfo = new PageInfo<>(members);
+        return Result.success(memberPageInfo);
     }
 
 }

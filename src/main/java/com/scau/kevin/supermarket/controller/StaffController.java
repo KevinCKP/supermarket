@@ -43,11 +43,11 @@ public class StaffController {
     // 查看员工信息
     @RequestMapping("/to_list")
     @ResponseBody
-    public PageInfo toList(Integer pageNum, Integer pageSize){
+    public Result<PageInfo> toList(Integer pageNum, Integer pageSize){
         PageHelper.startPage(pageNum,pageSize);
         List<Staff> staffs = staffService.listStaffs();
         PageInfo<Staff> staffPageInfo = new PageInfo<>(staffs);
-        return staffPageInfo;
+        return Result.success(staffPageInfo);
     }
     @RequestMapping("/to_list2")
     @ResponseBody

@@ -33,11 +33,13 @@
       </association>
   </resultMap>
   <sql id="Base_Column_List" >
-    gs_id, goods_id, gs_address, gs_number, gs_warnNumber, gs_note, gs_update_time,
+    goodsstock.gs_id, goodsstock.goods_id, goodsstock.gs_address, goodsstock.gs_number,
+    goodsstock.gs_warnNumber, goodsstock.gs_note, goodsstock.gs_update_time,
     goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
     goods.goods_salePrice, goods.goods_specification,goods.goods_metricUnit, goods.goods_buyPrice,
     goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
-    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
+    goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time,
+    goods.goods_state
   </sql>
     <sql id="fromTable">
         goodsstock left join goods on goodsstock.goods_id = goods.goods_id
@@ -98,9 +100,30 @@
         <include refid="Base_Column_List" />
         from
         <include refid="fromTable"/>
-        where goodsstock.gs_number between 0 and goodsstock.gs_warnNumber
+        where goodsstock.gs_warnNumber <![CDATA[ <> ]]> '2147483647' and (goodsstock.gs_number between 0 and goodsstock.gs_warnNumber)
     </select>
 
+    <select id="listSetWarning" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from
+        <include refid="fromTable" />
+        where goodsstock.gs_warnNumber between 0 and 2147483646
+    </select>
+
+    <select id="listUponWarning" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from
+        <include refid="fromTable"/>
+        where goodsstock.gs_number > goodsstock.gs_warnNumber
+    </select>
+
+    <update id="updateWarnNumber">
+        update goodsstock
+        set gs_warnNumber = #{gsWarnNumber}
+        where goods_id = #{goodsId}
+    </update>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from goodsstock
     where gs_id = #{gsId,jdbcType=BIGINT}

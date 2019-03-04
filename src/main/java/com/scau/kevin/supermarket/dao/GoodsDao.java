@@ -1,6 +1,8 @@
 package com.scau.kevin.supermarket.dao;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Goods;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,12 +22,14 @@ public interface GoodsDao {
 
     int updateByPrimaryKey(Goods record);
 
-    int goodsIsExisted(Long goodsId);
+    Integer goodsIsExisted(Long goodsId);
 
 
-    int updateGoodsState(Long goodsId, Byte goodsState);
+    int updateGoodsState(@Param("goodsId") Long goodsId,@Param("goodsState") Byte goodsState);
 
     List<Goods> listByFactors(Map<String,Object> map);
 
     List<Goods> listGoods();
+
+    List<Goods> listByFactor(QueryDto queryDto);
 }

@@ -41,6 +41,29 @@
     <include refid="Base_Column_List"/>
     from goods
   </select>
+  <select id="listByFactor" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    goods
+    <where>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(goods_create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(goods_create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="factor != null and factor != ''">
+        and goods_id like concat(concat('%',#{factor}),'%')
+        or
+        goods_name like concat(concat('%',#{factor}),'%')
+        or
+        goods_supplier like concat(concat('%',#{factor}),'%')
+        or
+        goods_brand like concat(concat('%',#{factor}),'%')
+      </if>
+    </where>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from goods
     where goods_id = #{goodsId,jdbcType=BIGINT}
@@ -300,8 +323,8 @@
     </where>
   </select>
 
-  <select id="goodsIsExisted" parameterType="java.lang.Integer">
-    select count(id)
+  <select id="goodsIsExisted" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(goods_id)
     from goods
     where goods_id = #{goodsId,jdbcType=BIGINT}
   </select>

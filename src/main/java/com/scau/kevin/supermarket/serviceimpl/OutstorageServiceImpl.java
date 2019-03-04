@@ -51,7 +51,7 @@ public class OutstorageServiceImpl implements OutstorageService {
 
     @Override
     public List<Outstorage> listOutstorage() {
-        return null;
+        return outstorageDao.listOutstorage();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.SupplierDao;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.entity.Supplier;
 import com.scau.kevin.supermarket.exception.GlobalException;
@@ -73,5 +74,10 @@ public class SupplierServiceImpl implements SupplierService {
         map.put("endTime", endTime);
         List<Supplier> suppliers = supplierDao.listByFactors(map);
         return suppliers;
+    }
+
+    @Override
+    public List<Supplier> listSupplierByFactor(QueryDto queryDto) {
+        return supplierDao.listByFactor(queryDto);
     }
 }

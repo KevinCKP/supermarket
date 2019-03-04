@@ -1,5 +1,6 @@
 package com.scau.kevin.supermarket.service;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Goods;
 import com.scau.kevin.supermarket.entity.Supplier;
 
@@ -35,4 +36,6 @@ public interface GoodsService {
 
     List<Goods> listByFactors(String goodsCategory, Byte goodsState, String goodsName, String beginTime,
                               String endTime);
+
+    List<Goods> listByFactor(QueryDto queryDto);
 }

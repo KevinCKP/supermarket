@@ -1,10 +1,228 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../lib/html5shiv.js"></script>
+    <script type="text/javascript" src="../lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../lib/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="../lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <script type="text/javascript" src="../lib/lay/2.4/layer.js"></script>
+    <![endif]-->
+    <title>会员管理</title>
 </head>
 <body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员中心 <span class="c-gray en">&gt;</span> 会员管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c"> 日期范围：
+        <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
+        -
+        <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="" name="">
+        <button type="submit" class="btn btn-success radius" name=""><i class="Hui-iconfont">&#xe665;</i> 搜会员</button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;" onclick="member_add()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加会员</a></span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <input type="hidden" name="pageNum" id="pageNum" value="1">
+            <input type="hidden" name="pageSize" id="pageSize" value="6">
+            <thead>
+            <tr class="text-c">
+                <th>会员编号</th>
+                <th>会员姓名</th>
+                <th>会员性别</th>
+                <th>联系方式</th>
+                <th>会员账号</th>
+                <th>描述</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="memberTbody">
+            </tbody>
+        </table>
+    </div>
+    <div id="pageDiv"></div>
+</div>
+<input type="hidden" id = "memberUpdateId">
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="../lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../static/h-ui/js/H-ui.min.js"}></script>
+<script type="text/javascript" src="../static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../lib/layui/layui.js"></script>
+<script type="text/javascript">
+
+    function querymember(){
+        var pageNum = $("[name='pageNum']").val();
+        var pageSize = $("[name='pageSize']").val();
+        $.ajax({
+            url : "http://localhost:8080/member/to_list",
+            type : "GET",
+            data : {
+                pageNum : pageNum,
+                pageSize : pageSize,
+                orderby : "member_id"
+            },
+            success : function (result) {
+                var data = result.data;
+                var total = data.total;
+                var pageNum = data.pageNum;
+                var pageSize = data.pageSize;//页大小
+                var members = data.list;
+                $('#memberTbody').html("");
+                for(var i = 0, length_1 = members.length; i < length_1; i++){
+                    (function (member) {
+                        var index = (pageNum - 1) * pageSize + i + 1;
+                        var memberId = member.memberId;
+                        console.log("for" + memberId);
+                        var tr = '<tr>' + '<td >' + member.memberId + '</td>'
+                            + '<td>' + member.memberName + '</td>';
+                        if (member.memberSex == 0) {
+                            tr = tr + '<td>' + "男" + '</td>';
+                        }
+                        if (member.memberSex == 1){
+                            tr = tr + '<td>' + "女" + '</td>';
+                        }
+                        tr = tr
+                            + '<td>' + member.memberPhone + '</td>'
+                            + '<td>' + member.memberAccount + '</td>'
+                            + '<td>' + member.memberDescription + '</td>';
+                        tr = tr + '<td class="td-manage">' + '<a title="编辑" id="row-edit' + member.memberId +'" href="#" ' +
+                            'class="ml-5" style="text-decoration:none">' +
+                            '<i class="Hui-iconfont">&#xe6df;</i></a>&nbsp;&nbsp;';
+                        tr = tr  + '<a onclick="member_delete(' + member.memberId + ')"  title="删除">' +
+                            '<i class="Hui-iconfont">&#xe631;</i></input></a></td> ';
+                        $('#memberTbody').append(tr);
+                        $('a#row-edit' + member.memberId).on('click', function () {
+                            member_edit(member)
+                        })
+                    })(members[i])
+                }
+                memberPage(total,pageNum,pageSize);
+            }
+        });
+    }
+
+    function memberPage(total,pageNum,pageSize){
+        layui.use(['laypage', 'layer'], function(){
+            var laypage = layui.laypage,layer = layui.layer;
+
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'pageDiv', //注意，这里的 test1 是 ID，不用加 # 号
+                count: total, //数据总数，从服务端得到
+                limit: pageSize,//每页显示的条数。laypage将会借助 count 和 limit 计算出分页数。
+                curr: pageNum,//当前页号
+                limits: [6, 10, 15, 20],
+                layout: ['limit', 'prev', 'page', 'next', 'skip', 'count'],//显示哪些分页组件
+                jump: function (obj, first) {//点击页号的时候执行的函数
+                    //obj包含了当前分页的所有参数，比如：
+
+                    $("[name='pageNum']").val(obj.curr);//向隐藏域设置当前页的值
+                    $("[name='pageSize']").val(obj.limit);//向隐藏域设置当前页的大小
+                    if (!first) {//首次不执行(点击的时候才执行)
+                        querymember();//执行查询分页函数(这个函数必须写在这里)
+                    }
+                }
+            });
+        });
+    }
+    function queryTrainSchemeFYBtn() {
+        $("[name='pageNum']").val("");//清空页号
+        querymember();//分页查询课程信息
+    }
+
+    /**
+     * 清空查询条件的按钮
+     * 1.清空所有的条件，包括隐藏域的条件，2.重新查询一次
+     * @param obj   将清空条件按钮自己传下来
+     */
+    function clearQueryCondition(obj) {
+        //1.清空条件
+        var form = $(obj).parents("form");
+        form.find("input").val("");
+        form.find("select").val("");
+        //2.重新查询一次
+        querymember();
+    }
+
+
+    $(function(){
+        querymember();
+
+    });
+    /*员工-添加*/
+    function member_add(){
+        var url = "/member/member-add.html";
+        var title = "添加";
+        layer_show(title,url,800,510);
+    }
+    /*员工-编辑*/
+    function member_edit(member){
+        var url = "/member/member-edit.html";
+        layer_show2(member,url,"编辑",800,510);
+    }
+    function layer_show2(member,url,title,w,h){
+        if (title == null || title == '') {
+            title=false;
+        }
+        if (url == null || url == '') {
+            url="404.html";
+        }
+        if (w == null || w == '') {
+            w=800;
+        }
+        if (h == null || h == '') {
+            h=($(window).height() - 50);
+        }
+        layer.open({
+            type: 2,
+            area: [w+'px', h +'px'],
+            fix: false, //不固定
+            maxmin: true,
+            shade:0.4,
+            title: title,
+            content: url,
+            success : function (layero,index) {
+                console.log("呵呵");
+                var iframeWin = window[layero.find("iframe")[0]['name']];
+                var flag = iframeWin.renderMemberData(member);
+                console.log("成功");
+                return flag;
+            }
+        });
+    }
+function member_delete(memberId) {
+    if(confirm("您确定要删除吗？")){
+        $.ajax({
+            url : "http://localhost:8080/member/delete/" + memberId,
+            type : "POST",
+
+            success : function () {
+                alert("删除成功");
+                querymember();
+            }
+        })
+    }
+}
+
+</script>
 </body>
 </html>

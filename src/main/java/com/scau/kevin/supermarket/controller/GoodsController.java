@@ -2,16 +2,21 @@ package com.scau.kevin.supermarket.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Buyorder;
 import com.scau.kevin.supermarket.entity.Goods;
+import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.result.Result;
 import com.scau.kevin.supermarket.service.BuyorderService;
 import com.scau.kevin.supermarket.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -38,7 +43,9 @@ public class GoodsController {
     // 添加商品信息
     @RequestMapping("/add")
     @ResponseBody
-    public Result<Goods> insertGoods(Goods goods){
+    public Result<Goods> insertGoods(HttpSession session,Goods goods){
+        Staff staff = (Staff) session.getAttribute("operator");
+        System.out.println(staff.getStaffName());
         goodsService.insertGoods(goods);
         return Result.success(goods);
     }
@@ -58,21 +65,32 @@ public class GoodsController {
      */
     @RequestMapping("/to_list")
     @ResponseBody
-    public Result<PageInfo> to_list(Integer pageNum, int pageSize, String orderby){
+    public Result<PageInfo> to_list(HttpSession session,Model model, Integer pageNum, int pageSize, String orderby){
+        Staff operator = (Staff) session.getAttribute("operator");
         PageHelper.startPage(pageNum,pageSize,orderby);
         List<Goods> goodss = goodsService.listGoods();
         PageInfo<Goods> pageInfo = new PageInfo<>(goodss);
+        model.addAttribute("goodss",goodss);
         return Result.success(pageInfo);
     }
 
     //查询单件商品
     @RequestMapping("/detail/{goodsId}")
-    public Result<Goods> getGoods(Long goodsId){
+    @ResponseBody
+    public Result<Goods> getGoods(@PathVariable("goodsId") Long goodsId){
         Goods goods = goodsService.getById(goodsId);
         return Result.success(goods);
 
     }
 
+    @RequestMapping("/to_list2")
+    @ResponseBody
+    public Result<PageInfo> queryByFactor(Integer pageNum, Integer pageSize, String orderby, QueryDto queryDto){
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Goods> goodsList = goodsService.listByFactor(queryDto);
+        PageInfo<Goods> goodsPageInfo = new PageInfo<>(goodsList);
+        return Result.success(goodsPageInfo);
+    }
     // 按条件查询商品信息
     public Result<Object> queryByFactors(Integer pageNum, Integer pageSize,String orderby,
                                          String goodsCategory, Byte goodsState, String goodsName,
@@ -84,9 +102,11 @@ public class GoodsController {
     }
 
     // 下架或者上架商品
-    public Result<Object> updateGoodsState(Long goodsId, Byte goodsState){
+    @RequestMapping("/changeState/{goodsId}")
+    @ResponseBody
+    public Result<Object> updateGoodsState(@PathVariable("goodsId") Long goodsId, Byte goodsState){
         goodsService.updateGoodsState(goodsId,goodsState);
-        return null;
+        return Result.success(true);
     }
 
 }

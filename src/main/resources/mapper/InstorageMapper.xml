@@ -61,6 +61,7 @@
     from
     <include refid="fromTable"/>
   </select>
+
   <select id="listInstorageByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     <include refid="Base_Column_List"/>

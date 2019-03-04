@@ -1,6 +1,10 @@
 package com.scau.kevin.supermarket.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +21,10 @@ public class Salerecord {
 
     private BigDecimal srChange;
 
+    private List<Saledetail> saledetails;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date srDate;
 
     private String staffNote;
@@ -27,7 +35,6 @@ public class Salerecord {
 
     private Integer srNumber;
 
-    private List<Saledetail> saledetails;
 
     public Long getSrId() {
         return srId;
@@ -121,7 +128,7 @@ public class Salerecord {
         return saledetails;
     }
 
-    public void setSaledetails(List<Saledetail> saledetails) {
+    public void setSaledetails(ArrayList<Saledetail> saledetails) {
         this.saledetails = saledetails;
     }
 }

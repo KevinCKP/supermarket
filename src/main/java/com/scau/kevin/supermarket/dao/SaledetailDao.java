@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.dao;
 
 import com.scau.kevin.supermarket.entity.Saledetail;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface SaledetailDao {
 
     int updateByPrimaryKey(Saledetail record);
 
-    int insertSaledetails(List<Saledetail> saledetails);
+    int insertSaledetails(@Param("saledetails") List<Saledetail> saledetails);
 }

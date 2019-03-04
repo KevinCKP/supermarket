@@ -28,9 +28,9 @@
       sd_number, sd_price, sd_total,
       sd_profit) values
       <foreach collection="saledetails" item="saledetail" index="index" separator=",">
-        (#{srId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT},
-        #{sdNumber,jdbcType=INTEGER}, #{sdPrice,jdbcType=DECIMAL}, #{sdTotal,jdbcType=DECIMAL},
-        #{sdProfit,jdbcType=DECIMAL})
+        (#{saledetail.srId,jdbcType=BIGINT}, #{saledetail.goodsId,jdbcType=BIGINT},
+        #{saledetail.sdNumber,jdbcType=INTEGER}, #{saledetail.sdPrice,jdbcType=DECIMAL},
+        #{saledetail.sdTotal,jdbcType=DECIMAL},#{saledetail.sdProfit,jdbcType=DECIMAL})
       </foreach>
   </insert>
   <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Saledetail" >

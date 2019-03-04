@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.BuyorderDao;
+import com.scau.kevin.supermarket.entity.Buydetail;
 import com.scau.kevin.supermarket.entity.Buyorder;
 import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.exception.GlobalException;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,6 +76,16 @@ public class BuyorderServiceImpl implements BuyorderService {
         buyorder.setBoBuyer(staff.getStaffId());
         buyorder.setBoBuyername(staff.getStaffName());
         buyorder.setCreateTime(new Date(System.currentTimeMillis()));
+        List<Buydetail> buydetails = buyorder.getBuydetails();
+        for(Buydetail buydetail : buydetails){
+            BigDecimal bdPrice = buydetail.getBdPrice();
+            BigDecimal bdNumber = BigDecimal.valueOf(buydetail.getBdNumber());
+            BigDecimal bdTotal = bdPrice.multiply(bdNumber);
+            buydetail.setBdTotal(bdTotal);
+            buydetail.setBdInNumber(0);
+            Byte state = (byte) 0;
+            buydetail.setBdState(state);
+        }
         buyorderDao.insert(buyorder);
         return false;
     }

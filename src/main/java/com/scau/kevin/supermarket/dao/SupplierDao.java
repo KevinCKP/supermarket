@@ -1,5 +1,6 @@
 package com.scau.kevin.supermarket.dao;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Supplier;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,6 @@ public interface SupplierDao {
     List<Supplier> listByFactors(Map<String,Object> map);
 
     List<Supplier> listSupplier();
+
+    List<Supplier> listByFactor(QueryDto queryDto);
 }

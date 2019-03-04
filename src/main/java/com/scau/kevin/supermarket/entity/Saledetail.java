@@ -19,6 +19,20 @@ public class Saledetail {
 
     private Goods goods;
 
+    public Saledetail(Long sdId, Long srId, Long goodsId, Integer sdNumber, BigDecimal sdPrice, BigDecimal sdTotal, BigDecimal sdProfit, Goods goods) {
+        this.sdId = sdId;
+        this.srId = srId;
+        this.goodsId = goodsId;
+        this.sdNumber = sdNumber;
+        this.sdPrice = sdPrice;
+        this.sdTotal = sdTotal;
+        this.sdProfit = sdProfit;
+        this.goods = goods;
+    }
+
+    public Saledetail() {
+    }
+
     public Long getSdId() {
         return sdId;
     }

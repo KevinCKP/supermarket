@@ -23,4 +23,8 @@ public interface SalerecordDao {
     List<Salerecord> listByFactors(Map<String,Object> map);
 
     List<Salerecord> listSalerecords();
+
+    Long listSalerecords_COUNT();
+
+    List<Salerecord> listSalerecords2();
 }

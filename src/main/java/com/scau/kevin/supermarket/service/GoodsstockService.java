@@ -25,4 +25,10 @@ public interface GoodsstockService {
     List<Goodsstock> listGoodsstock();
 
     List<Goodsstock> listGoodsstockByFactors(String goodsName, Long goodsId, Integer less, Integer most);
+
+    List<Goodsstock> listSetWarning();
+
+    List<Goodsstock> listUponWarning();
+
+    void updateWarnNumber(Long goodsId, Integer gsWarnNumber);
 }

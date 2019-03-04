@@ -1,5 +1,8 @@
 package com.scau.kevin.supermarket.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -12,6 +15,8 @@ public class Outstorage {
 
     private Long goodsId;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date osDate;
 
     private Integer osNumber;
@@ -104,5 +109,13 @@ public class Outstorage {
 
     public void setOsNote(String osNote) {
         this.osNote = osNote;
+    }
+
+    public Goods getGoods() {
+        return goods;
+    }
+
+    public void setGoods(Goods goods) {
+        this.goods = goods;
     }
 }

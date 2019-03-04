@@ -1,5 +1,6 @@
 package com.scau.kevin.supermarket.service;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.entity.Supplier;
 
@@ -26,4 +27,6 @@ public interface SupplierService {
     Supplier getById(Long supplierId);
 
     List<Supplier> listSupplierByFactors(String supplierName, String supplierLinkman, String beginTime, String endTime);
+
+    List<Supplier> listSupplierByFactor(QueryDto queryDto);
 }

@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.GoodsDao;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Goods;
 import com.scau.kevin.supermarket.entity.Supplier;
 import com.scau.kevin.supermarket.exception.GlobalException;
@@ -38,6 +39,11 @@ public class GoodsServiceImpl implements GoodsService {
             //编号已存在，抛出异常
             throw new GlobalException(CodeMessage.ID_EXISTS);
         } else{
+            if(goods.getGoodsMemprice() == null){
+                goods.setGoodsMemprice(goods.getGoodsSaleprice());
+            }
+            goods.setGoodsCreateTime(new Date(System.currentTimeMillis()));
+            goods.setGoodsUpdateTime(new Date(System.currentTimeMillis()));
             // 添加商品信息
             goodsDao.insertSelective(goods);
             // 商品添加后，初始化商品库存信息
@@ -103,6 +109,11 @@ public class GoodsServiceImpl implements GoodsService {
         map.put("endTime",endTime);
         List<Goods> goodsList = goodsDao.listByFactors(map);
         return goodsList;
+    }
+
+    @Override
+    public List<Goods> listByFactor(QueryDto queryDto) {
+        return goodsDao.listByFactor(queryDto);
     }
 
 

@@ -9,6 +9,7 @@ import com.scau.kevin.supermarket.service.InstorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,12 @@ public class InstorageServiceImpl implements InstorageService {
         Goodsstock goodsstock = goodsstockService.getById(instorage.getGoodsId());
         int stockNumber = goodsstock.getGsNumber();
         instorage.setIsAfternumber(stockNumber + instorage.getIsNumber());
+        goodsstock.setGsNumber(instorage.getIsAfternumber());
+        BigDecimal price = instorage.getIsGoodsPrice();
+        BigDecimal number = new BigDecimal(instorage.getIsNumber());
+        instorage.setIsGoodsTotal(price.multiply(number));
         instorageDao.insertSelective(instorage);
+        goodsstockService.updateGoodsstock(goodsstock);
         return true;
     }
 

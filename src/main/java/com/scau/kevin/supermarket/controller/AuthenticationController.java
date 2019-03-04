@@ -29,12 +29,12 @@ public class AuthenticationController {
         System.out.println(password);
         Staff staff = staffService.login(staffId,password);
         model.addAttribute("staff",staff);
-        session.setAttribute("staff",staff);
+        session.setAttribute("operator",staff);
         return Result.success(staff);
     }
     @RequestMapping("/welcome")
     public String welcome(Model model, HttpSession session){
-        model.addAttribute("staff",session.getAttribute("staff"));
+        model.addAttribute("staff",session.getAttribute("operator"));
         return "welcome";
     }
 

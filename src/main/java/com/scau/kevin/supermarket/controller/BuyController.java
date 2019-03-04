@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -33,8 +34,9 @@ public class BuyController {
 
     @RequestMapping("/order/add")
     // 制订采购单
-    public Result<Buyorder> makeOrder(Staff staff, Buyorder buyorder){
-        buyorderService.insertBuyorder(staff,buyorder);
+    public Result<Buyorder> makeOrder(HttpSession session, Staff staff, Buyorder buyorder){
+        Staff operator = (Staff) session.getAttribute("operator");
+        buyorderService.insertBuyorder(operator,buyorder);
         return Result.success(buyorder);
     }
 

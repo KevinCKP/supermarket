@@ -34,4 +34,7 @@ public interface SalerecordService {
     //新增销售订单
     boolean sellGoods(Salerecord salerecord, Staff staff);
 
+    Long listSalerecords_COUNT();
+
+    List<Salerecord> listSalerecords2();
 }

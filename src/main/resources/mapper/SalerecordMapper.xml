@@ -54,6 +54,11 @@
     goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
     goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
   </sql>
+  <sql id="Base_Column_List2">
+    salerecord.sr_id, salerecord.staff_id, salerecord.member_id, salerecord.sr_total,
+    salerecord.sr_actualCharge, salerecord.sr_change, salerecord.sr_date, salerecord.staff_note,
+    salerecord.sr_profit, salerecord.sr_salesman, salerecord.sr_number
+  </sql>
     <sql id="fromTable">
         salerecord left join saledetail on salerecord.sr_id = saledetail.sr_id left join goods
         on saledetail.goods_id = goods.goods_id
@@ -99,7 +104,20 @@
     select
     <include refid="Base_Column_List" />
     from
-    <include refid="fromTable" />
+    <include refid="fromTable"/>
+  </select>
+
+  <select id="listSalerecords2" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List2" />
+    from
+    salerecord
+  </select>
+
+  <select id="listSalerecords_COUNT" resultType="Long">
+    select count(0)
+    from
+    salerecord
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from salerecord

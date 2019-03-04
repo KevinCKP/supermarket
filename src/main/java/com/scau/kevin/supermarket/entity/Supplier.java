@@ -1,5 +1,8 @@
 package com.scau.kevin.supermarket.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.sql.Date;
 
 public class Supplier {
@@ -19,8 +22,12 @@ public class Supplier {
 
     private String supplierNote;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date supplierCreateTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date supplierUpdateTime;
 
     public Long getSupplierId() {

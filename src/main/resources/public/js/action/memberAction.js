@@ -18,3 +18,12 @@ function addMember(){
         }
     })
 }
+
+function renderMemberData(member) {
+    $("#memberId").val(member.memberId);
+    $("#memberName").val(member.memberName);
+    $("#memberPhone").val(member.memberPhone);
+    $("input[name='sex']:checked").val(member.memberSex);
+    $("#memberDescription").val(member.memberDescription);
+
+}

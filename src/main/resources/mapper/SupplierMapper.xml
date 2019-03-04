@@ -28,6 +28,29 @@
     <include refid="Base_Column_List"/>
     from supplier
   </select>
+  <select id="listByFactor" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
+    select
+    <include refid="Base_Column_List" />
+    from supplier
+    <where>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(supplier_create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(supplier_create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="factor != null and factor != ''">
+        and supplier_id like concat(concat('%',#{factor}),'%')
+        or
+        supplier_name like concat(concat('%',#{factor}),'%')
+        or
+        supplier_linkman like concat(concat('%',#{factor}),'%')
+        or
+        supplier_phone like concat(concat('%',#{factor}),'%')
+      </if>
+    </where>
+  </select>
+
   <select id="listByFactors" parameterType="java.util.Map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>

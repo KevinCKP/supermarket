@@ -2,12 +2,14 @@ package com.scau.kevin.supermarket.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.entity.Supplier;
 import com.scau.kevin.supermarket.result.Result;
 import com.scau.kevin.supermarket.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -45,7 +47,7 @@ public class SupplierController {
     //删除供应商信息
     @RequestMapping("/delete/{supplierId}")
     @ResponseBody
-    public Result<Boolean> deleteSupplier(Staff staff, Long supplierId){
+    public Result<Boolean> deleteSupplier(Staff staff, @PathVariable("supplierId") Long supplierId){
         supplierService.deleteSupplier(staff,supplierId);
         return Result.success(true);
     }
@@ -68,12 +70,21 @@ public class SupplierController {
         return Result.success(supplierPageInfo);
     }
     // 按条件查询供应商信息
-    @RequestMapping("/to_list2")
+    @RequestMapping("/to_list3")
     public Result<PageInfo> toListByFactors(int pageNum, int pageSize, String orderby,
                                             String supplierName, String supplierLinkman,String beginTime,
                                             String endTime){
         PageHelper.startPage(pageNum,pageSize,orderby);
         List<Supplier> suppliers = supplierService.listSupplierByFactors(supplierName,supplierLinkman,beginTime,endTime);
+        PageInfo<Supplier> supplierPageInfo = new PageInfo<>(suppliers);
+        return Result.success(supplierPageInfo);
+    }
+
+    @RequestMapping("/to_list2")
+    @ResponseBody
+    public Result<PageInfo> toListByFactor(Integer pageNum, Integer pageSize, String orderby, QueryDto queryDto){
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Supplier> suppliers = supplierService.listSupplierByFactor(queryDto);
         PageInfo<Supplier> supplierPageInfo = new PageInfo<>(suppliers);
         return Result.success(supplierPageInfo);
     }

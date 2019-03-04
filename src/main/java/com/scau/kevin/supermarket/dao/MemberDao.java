@@ -21,4 +21,6 @@ public interface MemberDao {
     int updateByPrimaryKey(Member record);
 
     List<Member> selectListByFactors(Map<String,Object> map);
+
+    List<Member> listMembers();
 }

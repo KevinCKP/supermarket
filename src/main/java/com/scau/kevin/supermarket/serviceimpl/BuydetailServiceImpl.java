@@ -37,4 +37,8 @@ public class BuydetailServiceImpl implements BuydetailService {
     public boolean deleteBuydetail(List<Buydetail> buydetails) {
         return false;
     }
+
+    public static void main(String[] args) {
+
+    }
 }

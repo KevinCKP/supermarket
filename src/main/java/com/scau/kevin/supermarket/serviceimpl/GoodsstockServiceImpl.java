@@ -61,7 +61,7 @@ public class GoodsstockServiceImpl implements GoodsstockService{
 
     @Override
     public Goodsstock getById(Long goodsId) {
-        return goodsstockDao.selectByPrimaryKey(goodsId);
+        return goodsstockDao.selectByGoodsId(goodsId);
     }
 
     @Override
@@ -82,5 +82,20 @@ public class GoodsstockServiceImpl implements GoodsstockService{
         map.put("less",less);
         map.put("most",most);
         return goodsstockDao.listGoodsstockByFactors(map);
+    }
+
+    @Override
+    public List<Goodsstock> listSetWarning() {
+        return goodsstockDao.listSetWarning();
+    }
+
+    @Override
+    public List<Goodsstock> listUponWarning() {
+        return goodsstockDao.listUponWarning();
+    }
+
+    @Override
+    public void updateWarnNumber(Long goodsId, Integer gsWarnNumber) {
+        goodsstockDao.updateWarnNumber(goodsId,gsWarnNumber);
     }
 }

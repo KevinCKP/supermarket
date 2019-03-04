@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean updateMember(Member member) {
-        return false;
+        return memberDao.updateByPrimaryKeySelective(member) >= 1;
     }
 
     @Override
@@ -49,6 +49,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> listMembers() {
-        return null;
+        return memberDao.listMembers();
     }
 }

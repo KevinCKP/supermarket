@@ -8,9 +8,11 @@ import com.scau.kevin.supermarket.result.Result;
 import com.scau.kevin.supermarket.service.SalerecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -27,17 +29,19 @@ public class SalesController {
     // 销售
     @RequestMapping("/add")
     @ResponseBody
-    public Result<Salerecord> sell(Salerecord salerecord, Staff staff){
-        salerecordService.sellGoods(salerecord,staff);
+    public Result<Object> sell(@RequestBody Salerecord salerecord, HttpSession session){
+        Staff operator = (Staff) session.getAttribute("operator");
+        salerecordService.sellGoods(salerecord,operator);
         return Result.success(salerecord);
     }
 
     // 查看销售订单
     @RequestMapping("/to_list")
     @ResponseBody
-    public Result<PageInfo> toList(int pageNum, int pageSize, String orderby){
-        PageHelper.startPage(pageNum,pageSize,orderby);
+    public Result<PageInfo> toList(Integer pageNum, Integer pageSize, String orderby){
         List<Salerecord> salerecords = salerecordService.listSalerecords();
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Salerecord> salerecords2 = salerecordService.listSalerecords2();
         PageInfo<Salerecord> salerecordPageInfo = new PageInfo<>(salerecords);
         return Result.success(salerecordPageInfo);
     }
