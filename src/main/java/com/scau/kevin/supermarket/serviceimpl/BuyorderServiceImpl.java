@@ -38,9 +38,7 @@ public class BuyorderServiceImpl implements BuyorderService {
        // String endTime = "2018-12-31 00:00:00";
       //  map.put("beginTime",beginTime);
       //  map.put("endTime",endTime);
-        String createTime = "2018-12-30 00:00:00";
-        Boolean boIsFinished = true;
-        return buyorderDao.listByFactors(map);
+        return buyorderDao.listBuyorder();
     }
 
 
@@ -73,20 +71,23 @@ public class BuyorderServiceImpl implements BuyorderService {
     @Override
     @Transactional
     public boolean insertBuyorder(Staff staff, Buyorder buyorder) {
+        Long boId = System.currentTimeMillis();
+        buyorder.setBoId(boId);
         buyorder.setBoBuyer(staff.getStaffId());
         buyorder.setBoBuyername(staff.getStaffName());
         buyorder.setCreateTime(new Date(System.currentTimeMillis()));
         List<Buydetail> buydetails = buyorder.getBuydetails();
         for(Buydetail buydetail : buydetails){
+            buydetail.setBoId(boId);
             BigDecimal bdPrice = buydetail.getBdPrice();
             BigDecimal bdNumber = BigDecimal.valueOf(buydetail.getBdNumber());
             BigDecimal bdTotal = bdPrice.multiply(bdNumber);
             buydetail.setBdTotal(bdTotal);
             buydetail.setBdInNumber(0);
-            Byte state = (byte) 0;
-            buydetail.setBdState(state);
+            buydetail.setBdState((byte) 0);
         }
         buyorderDao.insert(buyorder);
+        buydetailService.insertBuydetail(buydetails);
         return false;
     }
 
@@ -114,5 +115,10 @@ public class BuyorderServiceImpl implements BuyorderService {
     @Override
     public Boolean asseror(Staff staff, Long buyorderId) {
         return null;
+    }
+
+    @Override
+    public List<Buyorder> listBuyorder_COUNT() {
+        return buyorderDao.listBuyorder_COUNT();
     }
 }

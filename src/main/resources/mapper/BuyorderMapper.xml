@@ -57,6 +57,10 @@
     goods.goods_memPrice, goods.goods_destination, goods.goods_producePlace,goods.goods_category,
     goods.goods_supplier, goods.goods_material, goods.goods_brand, goods.goods_picture, goods.goods_create_time
   </sql>
+  <sql id="Base_Column_List2">
+    buyorder.bo_id, buyorder.bo_assessor, buyorder.bo_buyer, buyorder.bo_buyerName, buyorder.bo_assessorName,
+    buyorder.bo_total, buyorder.bo_date, buyorder.bo_note, buyorder.bo_state, buyorder.bo_isFinished, buyorder.create_time
+  </sql>
   <sql id="fromTable">
     buyorder left join buydetail on buyorder.bo_id = buydetail.bo_id left join goods on buydetail.goods_id = goods.goods_id
   </sql>
@@ -65,6 +69,19 @@
     <include refid="Base_Column_List"/>
     from <include refid="fromTable" />
     where buyorder.bo_id = #{boId,jdbcType=BIGINT}
+  </select>
+
+  <select id="listBuyorder" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List"/>
+    from
+    <include refid="fromTable"/>
+  </select>
+  <select id="listBuyorder_COUNT" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List2"/>
+    from
+    buyorder
   </select>
   <select id="listByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
     select

@@ -23,4 +23,6 @@ public interface BuyorderDao {
     List<Buyorder> listByFactors(Map<String, Object> map);
 
     List<Buyorder> listBuyorder();
+
+    List<Buyorder> listBuyorder_COUNT();
 }

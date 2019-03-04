@@ -36,4 +36,6 @@ public interface BuyorderService {
     List<Buyorder> listByFactors(Map<String,Object> map);
 
     Boolean asseror(Staff staff, Long buyorderId);
+
+    List<Buyorder> listBuyorder_COUNT();
 }

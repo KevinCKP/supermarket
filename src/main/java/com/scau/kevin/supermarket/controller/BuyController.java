@@ -11,6 +11,7 @@ import com.scau.kevin.supermarket.service.BuyreturnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,7 +35,7 @@ public class BuyController {
 
     @RequestMapping("/order/add")
     // 制订采购单
-    public Result<Buyorder> makeOrder(HttpSession session, Staff staff, Buyorder buyorder){
+    public Result<Buyorder> makeOrder(HttpSession session,@RequestBody Buyorder buyorder){
         Staff operator = (Staff) session.getAttribute("operator");
         buyorderService.insertBuyorder(operator,buyorder);
         return Result.success(buyorder);
@@ -43,10 +44,11 @@ public class BuyController {
     // 查看采购单
     @RequestMapping("/order/to_list")
 
-    public Result<Object> toList(int pageNum,int pageSize){
+    public Result<PageInfo> toList(int pageNum,int pageSize){
         String orderby = "buyorder.create_time";
-        PageHelper.startPage(pageNum,pageSize,orderby);
         List<Buyorder> buyorders = buyorderService.listBuyorder();
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Buyorder> buyorders1 = buyorderService.listBuyorder_COUNT();
         PageInfo<Buyorder> pageInfo = new PageInfo<>(buyorders);
         return Result.success(pageInfo);
     }

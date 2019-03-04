@@ -9,7 +9,7 @@
     <result column="bd_price" property="bdPrice" jdbcType="DECIMAL" />
     <result column="bd_total" property="bdTotal" jdbcType="DECIMAL" />
     <result column="bd_note" property="bdNote" jdbcType="VARCHAR" />
-    <result column="bd_state" property="bdIsfinished" jdbcType="TINYINT" />
+    <result column="bd_state" property="bdState" jdbcType="TINYINT" />
     <result column="bd_in_number" property="bdInNumber" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -26,13 +26,13 @@
     where bd_id = #{bdId,jdbcType=BIGINT}
   </delete>
 
-  <insert id="insertAllBuydetails" parameterType="java.util.ArrayList">
+  <insert id="insertAllBuydetails" parameterType="java.util.List">
     insert into buydetail (goods_id, bo_id,
       bd_number, bd_price, bd_total,
       bd_note, bd_state) values
       <foreach collection="buydetails" item="buydetail" index="index" separator=",">
         (#{buydetail.goodsId},#{buydetail.boId},#{buydetail.bdNumber},#{buydetail.bdPrice},
-        #{buydetail.total},#{buydetail.bdNote},#{buydetail.bdState})
+        #{buydetail.bdTotal},#{buydetail.bdNote},#{buydetail.bdState})
       </foreach>
   </insert>
   <insert id="insert" parameterType="com.scau.kevin.supermarket.entity.Buydetail" >

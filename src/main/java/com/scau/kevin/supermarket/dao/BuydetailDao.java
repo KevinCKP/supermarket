@@ -1,9 +1,10 @@
 package com.scau.kevin.supermarket.dao;
 
 import com.scau.kevin.supermarket.entity.Buydetail;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface BuydetailDao {
@@ -19,5 +20,5 @@ public interface BuydetailDao {
 
     int updateByPrimaryKey(Buydetail record);
 
-    int insertAllBuydetails(ArrayList<Buydetail> buydetails);
+    int insertAllBuydetails(@Param("buydetails") List<Buydetail> buydetails);
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,9 +22,9 @@ public class BuydetailServiceImpl implements BuydetailService {
     @Override
     @Transactional
     public boolean insertBuydetail(List<Buydetail> buydetails) {
-        buydetailDao.insertAllBuydetails((ArrayList<Buydetail>) buydetails);
+        buydetailDao.insertAllBuydetails(buydetails);
 
-        return false;
+        return true;
     }
 
     @Override
