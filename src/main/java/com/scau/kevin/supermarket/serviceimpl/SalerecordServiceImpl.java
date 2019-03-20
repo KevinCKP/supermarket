@@ -1,6 +1,8 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.SalerecordDao;
+import com.scau.kevin.supermarket.dto.ProfitTotalDto;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Goods;
 import com.scau.kevin.supermarket.entity.Saledetail;
 import com.scau.kevin.supermarket.entity.Salerecord;
@@ -13,11 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.sql.Date;
-import java.util.HashMap;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: kevin
@@ -60,11 +60,7 @@ public class SalerecordServiceImpl implements SalerecordService {
 
     @Override
     public List<Salerecord> listByFactors(Timestamp begin, Timestamp end, String salesman) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("beginTime",begin);
-        map.put("endTime",end);
-        map.put("salesman",salesman);
-        return salerecordDao.listByFactors(map);
+        return null;
     }
 
 
@@ -116,5 +112,35 @@ public class SalerecordServiceImpl implements SalerecordService {
     @Override
     public List<Salerecord> listSalerecords2() {
         return salerecordDao.listSalerecords2();
+    }
+
+    @Override
+    public List<Salerecord> listSalerecordsByFactor(QueryDto queryDto) {
+        return salerecordDao.listByFactors(queryDto);
+    }
+
+    @Override
+    public List<Salerecord> listByFactors_COUNT(QueryDto queryDto) {
+        return salerecordDao.listByFactors_COUNT(queryDto);
+    }
+
+    @Override
+    public List<ProfitTotalDto> countByMonth(String time) {
+        return salerecordDao.countTotalByMonth(time);
+    }
+
+    @Override
+    public List<ProfitTotalDto> countByYear(String s) {
+        return salerecordDao.countTotalByYear(s);
+    }
+
+    @Override
+    public List<ProfitTotalDto> countGoodsByYear(String time, Long goodsId) {
+        return salerecordDao.countGoodsByYear(time,goodsId);
+    }
+
+    @Override
+    public List<ProfitTotalDto> countGoodsByMonth(String time, Long goodsId) {
+        return salerecordDao.countGoodsByMonth(time,goodsId);
     }
 }

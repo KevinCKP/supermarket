@@ -21,4 +21,7 @@ public interface InstorageService {
 
     List<Instorage> listInstorageByFactors(String operatorName, String goodsName, Long goodsId, String beginTime, String endTime);
 
+    Instorage updateInstorageNote(Long isId, String isNote);
+
+    Instorage getById(Long isId);
 }

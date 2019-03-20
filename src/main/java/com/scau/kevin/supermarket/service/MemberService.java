@@ -1,9 +1,9 @@
 package com.scau.kevin.supermarket.service;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Member;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: kevin
@@ -21,7 +21,8 @@ public interface MemberService {
     boolean deleteMember(Long memberId);
 
     //查询会员信息
-    List<Member> listByFactors(Map<String,Object> map);
 
     List<Member> listMembers();
+
+    List<Member> listMembersByFactor(QueryDto queryDto);
 }

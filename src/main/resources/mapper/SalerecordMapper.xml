@@ -73,29 +73,43 @@
   </select>
 
   <!--  按条件查询 -->
-  <select id="listByFactors" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  <select id="listByFactors" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
     select
     <include refid="Base_Column_List" />
     from <include refid="fromTable"/>
     <where>
-      <if test="staffId != null">
-        and staff_id = #{staffId}
-      </if>
-      <if test="srSalesman != null and srSalesman != ''" >
-        and salerecord.sr_salesname like "%"#{salesman}"%"
-        <!-- and sr_buyerName like concat(concat('%',#{srBuyerName}),'%') -->
-      </if>
       <if test="beginTime != null and beginTime != ''">
-        <![CDATA[ and DATE_FORMAT(salerecord.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+        <![CDATA[ and DATE_FORMAT(salerecord.sr_date,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
       </if>
       <if test="endTime != null and endTime != ''">
-        <![CDATA[ and DATE_FORMAT(salerecord.create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+        <![CDATA[ and DATE_FORMAT(salerecord.sr_date,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
       </if>
-      <if test="createTime != null and createTime != ''">
-        <![CDATA[ and DATE_FORMAT(salerecord.create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime},'%Y-%m-%d')]]>
+      <if test="factor != null and factor != ''">
+        and salerecord.sr_salesman like concat(concat('%',#{factor}),'%')
+        or
+        goods.goods_name like concat(concat('%',#{factor}),'%')
+        or
+        goods.goods_id like concat(concat('%',#{factor}),'%')
       </if>
-      <if test="goodsName != null and goodsName != ''">
-        and goods.goods_name = #{goodsName}
+    </where>
+  </select>
+
+  <select id="listByFactors_COUNT" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
+    select distinct salerecord.sr_id
+    from <include refid="fromTable"/>
+    <where>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(salerecord.sr_date,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(salerecord.sr_date,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="factor != null and factor != ''">
+        and salerecord.sr_salesman like concat(concat('%',#{factor}),'%')
+        or
+        goods.goods_name like concat(concat('%',#{factor}),'%')
+        or
+        goods.goods_id like concat(concat('%',#{factor}),'%')
       </if>
     </where>
   </select>
@@ -106,7 +120,77 @@
     from
     <include refid="fromTable"/>
   </select>
+  
+  
+  <select id="countTotalByMonth" parameterType="java.lang.String" resultType="com.scau.kevin.supermarket.dto.ProfitTotalDto">
+    SELECT coalesce(s.total,0) 'total', coalesce(s.profit,0) 'profit' from(
+    SELECT
+    adddate(#{time}, numlist.id) AS 'date'
+    FROM
+    (
+    SELECT
+    n1.i + n10.i * 10 + n100.i * 100 AS id
+    FROM
+    num n1
+    CROSS JOIN num AS n10
+    CROSS JOIN num AS n100
+    ) AS numlist
+    WHERE
+    adddate(#{time}, numlist.id) &lt; date_add(#{time},interval 1 month)) temp
+    LEFT JOIN
+    (SELECT left(sr_date,10)as sdate,sum(sr_total) total,sum(sr_profit) profit FROM salerecord GROUP BY sdate) s on temp.date = s.sdate order by temp.date;
+  </select>
 
+  <select id="countTotalByYear" parameterType="java.lang.String" resultType="com.scau.kevin.supermarket.dto.ProfitTotalDto">
+    SELECT
+    coalesce(s.total,0) 'total',coalesce(s.profit,0) 'profit' from(
+    SELECT adddate(#{time}, interval numlist.id month) AS 'date' FROM
+    (
+    SELECT * from
+    (SELECT n1.i + n10.i * 10 AS id FROM num n1 CROSS JOIN num AS n10) a
+    where a.id &lt;= 11
+    ) AS numlist
+    WHERE adddate(#{time}, interval numlist.id month) &lt;= date_add(#{time},interval 12 month)) temp
+    LEFT JOIN
+    (SELECT left(sr_date,7)as sdate,sum(sr_total) total,sum(sr_profit) profit FROM salerecord GROUP BY sdate) s on left(temp.date,7) = s.sdate ORDER BY temp.date;
+  </select>
+
+  <select id="countGoodsByYear" resultType="com.scau.kevin.supermarket.dto.ProfitTotalDto">
+    SELECT
+    coalesce(s.total,0) 'total',coalesce(s.profit,0) 'profit' from(
+    SELECT adddate(#{time}, interval numlist.id month) AS 'date' FROM
+    (
+    SELECT * from
+    (SELECT n1.i + n10.i * 10 AS id FROM num n1 CROSS JOIN num AS n10) a
+    where a.id &lt;= 11
+    ) AS numlist
+    WHERE adddate(#{time}, interval numlist.id month) &lt;= date_add(#{time},interval 12 month)) temp
+    LEFT JOIN
+    (SELECT left(salerecord.sr_date,7)as sdate,sum(saledetail.sd_total) total,sum(saledetail.sd_profit) profit FROM
+     salerecord left join saledetail on salerecord.sr_id = saledetail.sr_id where saledetail.goods_id = #{goodsId}
+     GROUP BY sdate) s on left(temp.date,7) = s.sdate ORDER BY temp.date;
+  </select>
+
+  <select id="countGoodsByMonth" resultType="com.scau.kevin.supermarket.dto.ProfitTotalDto">
+  SELECT coalesce(s.total,0) 'total', coalesce(s.profit,0) 'profit' from(
+  SELECT
+  adddate(#{time}, numlist.id) AS 'date'
+  FROM
+  (
+  SELECT
+  n1.i + n10.i * 10 + n100.i * 100 AS id
+  FROM
+  num n1
+  CROSS JOIN num AS n10
+  CROSS JOIN num AS n100
+  ) AS numlist
+  WHERE
+  adddate(#{time}, numlist.id) &lt; date_add(#{time},interval 1 month)) temp
+  LEFT JOIN
+  (SELECT left(salerecord.sr_date,10)as sdate,sum(saledetail.sd_total) total,sum(saledetail.sd_profit) profit FROM
+  salerecord left join saledetail on salerecord.sr_id = saledetail.sr_id where saledetail.goods_id =  #{goodsId}
+  GROUP BY sdate) s on temp.date = s.sdate order by temp.date;
+</select>
   <select id="listSalerecords2" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List2" />

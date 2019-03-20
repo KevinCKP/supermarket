@@ -2,6 +2,7 @@ package com.scau.kevin.supermarket.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.result.Result;
 import com.scau.kevin.supermarket.service.StaffService;
@@ -51,10 +52,9 @@ public class StaffController {
     }
     @RequestMapping("/to_list2")
     @ResponseBody
-    public Result<PageInfo> toListByFactors(int pageNum, int pageSize, String orderby, String staffName,
-                                            String staffType, String beginDate, String endDate){
+    public Result<PageInfo> toListByFactors(int pageNum, int pageSize, String orderby, QueryDto queryDto){
         PageHelper.startPage(pageNum,pageSize,orderby);
-        List<Staff> staffs = staffService.listStaffsByFactors(staffName,staffType,beginDate,endDate);
+        List<Staff> staffs = staffService.listStaffsByFactors(queryDto);
         PageInfo<Staff> staffPageInfo = new PageInfo<>(staffs);
         return Result.success(staffPageInfo);
     }

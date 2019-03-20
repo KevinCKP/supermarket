@@ -1,11 +1,12 @@
 package com.scau.kevin.supermarket.service;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
+import com.scau.kevin.supermarket.entity.Buydetail;
 import com.scau.kevin.supermarket.entity.Buyorder;
 import com.scau.kevin.supermarket.entity.Staff;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: kevin
@@ -33,9 +34,15 @@ public interface BuyorderService {
     //修改订单
     Buyorder updateBuyorder(Staff staff, Buyorder buyorder);
 
-    List<Buyorder> listByFactors(Map<String,Object> map);
+    List<Buyorder> listByFactors(QueryDto queryDto);
 
     Boolean asseror(Staff staff, Long buyorderId);
 
     List<Buyorder> listBuyorder_COUNT();
+
+    void updateBuydetail(Buydetail buydetail);
+
+    void deleteBuyorder(Staff staff, Long boId);
+
+    void listByFactors_COUNT(QueryDto queryDto);
 }

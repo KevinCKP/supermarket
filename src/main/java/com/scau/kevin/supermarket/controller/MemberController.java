@@ -2,6 +2,7 @@ package com.scau.kevin.supermarket.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Member;
 import com.scau.kevin.supermarket.result.Result;
 import com.scau.kevin.supermarket.service.MemberService;
@@ -56,5 +57,15 @@ public class MemberController {
         PageInfo<Member> memberPageInfo = new PageInfo<>(members);
         return Result.success(memberPageInfo);
     }
+
+    @RequestMapping("/to_list2")
+    @ResponseBody
+    public Result<PageInfo> toList2(int pageNum, int pageSize, String orderby, QueryDto queryDto){
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        List<Member> members = memberService.listMembersByFactor(queryDto);
+        PageInfo<Member> memberPageInfo = new PageInfo<>(members);
+        return Result.success(memberPageInfo);
+    }
+
 
 }

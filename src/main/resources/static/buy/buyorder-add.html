@@ -22,7 +22,10 @@
     <script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
 </head>
 <body>
-<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="buyorder_save()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 保存</a></span> </div>
+
+<div class="cl pd-5 bg-1 bk-gray mt-20">
+    采购日期：<input type="text" onfocus="WdatePicker({ minDate:'%y-%M-%d' })" id="boDate" class="input-text Wdate" style="width:120px;">
+    <span class="l"><a href="javascript:;" onclick="buyorder_save()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 保存</a></span> </div>
 <div class="mt-20">
     <table class="table table-border table-bordered table-hover table-bg table-sort">
         <input type="hidden" name="pageNum" id="pageNum" value="1">

@@ -25,25 +25,28 @@ function querygoodsstock(){
                         + '<td>' + goodsstock.goods.goodsSupplier  + '</td>'
                         + '<td>' + goodsstock.goods.goodsBrand + '</td>';
                     if(goodsstock.goods.goodsState == 0){
-                        tr += '<td>' + "已下架" + '</td>';
+                        tr += '<td class="td-status"><span class="label label-fail radius">已下架</span></td>';
+
                     }
                     if(goodsstock.goods.goodsState == 1){
-                        tr += '<td>' + "在售" + '</td>';
+                        tr += '<td class="td-status"><span class="label label-success radius">在售</span></td>';
                     }
                     tr += '<td>' + goodsstock.gsNumber + '</td>'
                     + '<td>' + goodsstock.gsWarnnumber + '</td>'
                     + '<td>' + goodsstock.gsAddress + '</td>';
-                    td =  '<td class="td-manage">' + '<a onclick="goods_stop(this,\'10001\')"  title="下架">' +
-                        '<i class="Hui-iconfont">&#xe631;</i></input> ';
-                    tr = tr + td;
-                    tr = tr +  '<a href="#" id="row-edit' + goodsstock.gsId + '" class="row-edit" title="编辑"' +
+                    tr = tr +  '<td class="td-manage"><a href="#" id="row-edit' + goodsstock.gsId + '" class="row-edit" title="编辑"' +
                         ' class="ml-5" style="text-decoration:none">' +
-                        '<i class="Hui-iconfont">&#xe6df;</i></a> '
-                        + '</tr>';
+                        '<i class="Hui-iconfont">&#xe6df;</i></a> ';
+                    td =  '<a id="row-cancel' + goodsstock.gsId + '"  title="取消预警">' +
+                        '<i class="Hui-iconfont">&#xe631;</i></a></td></tr> ';
+                    tr = tr + td;
                     $('#goodsstockTbody').append(tr);
                     $('a#row-edit' + goodsstock.gsId).on('click', function () {
-                        goods_edit(goodsstock)
-                    })
+                        goodsstock_edit(goodsstock)
+                    });
+                    $('a#row-cancel'+goodsstock.gsId).click('click',function () {
+                        warn_cancel(goodsstock);
+                    });
                 })(goodsstocks[i])
             }
             goodsPage(total,pageNum,pageSize);
@@ -373,7 +376,6 @@ function warn_cancel(goodsstock) {
             },
             success : function () {
                 alert("取消成功");
-                querywarngoods();
             }
         })
     }
@@ -426,4 +428,40 @@ function updateWarn() {
             querywarngoods();
         }
     })
+}
+
+function goodsstock_edit(goodsstock) {
+    var url = "/stock/stock-edit.html";
+    console.log(goodsstock);
+    layer_show4("编辑",url,800,500,goodsstock);
+}
+function layer_show4(title,url,w,h,goodsstock){
+    if (title == null || title == '') {
+        title=false;
+    }
+    if (url == null || url == '') {
+        url="404.html";
+    }
+    if (w == null || w == '') {
+        w=800;
+    }
+    if (h == null || h == '') {
+        h=($(window).height() - 50);
+    }
+    layer.open({
+        type: 2,
+        area: [w+'px', h +'px'],
+        fix: false, //不固定
+        maxmin: true,
+        shade:0.4,
+        title: title,
+        content: url,
+        success : function (layero,index) {
+            console.log("呵呵");
+            var iframeWin = window[layero.find("iframe")[0]['name']];
+            var flag = iframeWin.renderGoodsstockData(goodsstock);
+            console.log("成功");
+            return flag;
+        }
+    });
 }

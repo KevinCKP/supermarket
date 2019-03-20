@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.StaffDao;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 import com.scau.kevin.supermarket.exception.GlobalException;
 import com.scau.kevin.supermarket.result.CodeMessage;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,14 +65,16 @@ public class StaffServiceImpl implements StaffService {
 //        if(!staffId.matches("[0-9],{1,}")){
 //            throw new GlobalException(CodeMessage.LOGIN_ERROR);
 //        }
+        // 获得加密后的密码
         String newPassword = MD5Util.md5(password);
+
+        // 查询是否有账号和密码匹配的用户
         Staff staff = staffDao.getByIdAndPassword(Long.valueOf(staffId),newPassword);
         if (staff == null){
             throw new GlobalException(CodeMessage.LOGIN_ERROR);
-        } else if (staff.getStaffRole() != null && staff.getStaffRole() == 0){
+        } else if (staff.getStaffRole() != null && staff.getStaffRole() == 0) {
             throw new GlobalException(CodeMessage.NO_LOGIN_PERMISSION);
         }
-        System.out.println(staff.getStaffName());
         staff.setStaffPassword(null);
         return staff;
     }
@@ -84,21 +86,8 @@ public class StaffServiceImpl implements StaffService {
 
     // 条件查询
     @Override
-    public List<Staff> listStaffsByFactors(String staffName, String staffType, String beginDate, String endDate) {
-        Map<String,Object> map = new HashMap<>();
-        if(staffName != null){
-            map.put("staffName",staffName);
-        }
-        if(staffType != null){
-            map.put("staffType",staffType);
-        }
-        if(beginDate != null){
-            map.put("beginDate",beginDate);
-        }
-        if(endDate != null){
-            map.put("endDate",endDate);
-        }
-        List<Staff> staffs = staffDao.listStaffsByFactors(map);
+    public List<Staff> listStaffsByFactors(QueryDto queryDto) {
+        List<Staff> staffs = staffDao.listStaffsByFactors(queryDto);
         return staffs;
     }
 }

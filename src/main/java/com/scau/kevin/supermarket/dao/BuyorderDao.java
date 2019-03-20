@@ -1,10 +1,10 @@
 package com.scau.kevin.supermarket.dao;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Buyorder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface BuyorderDao {
@@ -20,7 +20,9 @@ public interface BuyorderDao {
 
     int updateByPrimaryKey(Buyorder record);
 
-    List<Buyorder> listByFactors(Map<String, Object> map);
+    List<Buyorder> listByFactors(QueryDto queryDto);
+
+    List<Buyorder> listByFactors_COUNT(QueryDto queryDto);
 
     List<Buyorder> listBuyorder();
 

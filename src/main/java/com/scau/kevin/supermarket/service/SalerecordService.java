@@ -1,5 +1,7 @@
 package com.scau.kevin.supermarket.service;
 
+import com.scau.kevin.supermarket.dto.ProfitTotalDto;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Salerecord;
 import com.scau.kevin.supermarket.entity.Staff;
 
@@ -37,4 +39,16 @@ public interface SalerecordService {
     Long listSalerecords_COUNT();
 
     List<Salerecord> listSalerecords2();
+
+    List<Salerecord> listSalerecordsByFactor(QueryDto queryDto);
+
+    List<Salerecord> listByFactors_COUNT(QueryDto queryDto);
+
+    List<ProfitTotalDto> countByMonth(String time);
+
+    List<ProfitTotalDto> countByYear(String s);
+
+    List<ProfitTotalDto> countGoodsByYear(String time, Long goodsId);
+
+    List<ProfitTotalDto> countGoodsByMonth(String time, Long goodsId);
 }

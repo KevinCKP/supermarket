@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.BuyorderDao;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Buydetail;
 import com.scau.kevin.supermarket.entity.Buyorder;
 import com.scau.kevin.supermarket.entity.Staff;
@@ -30,6 +31,7 @@ public class BuyorderServiceImpl implements BuyorderService {
     private BuyorderDao buyorderDao;
     @Autowired
     private BuydetailService buydetailService;
+
 
     @Override
     public List<Buyorder> listBuyorder() {
@@ -96,20 +98,18 @@ public class BuyorderServiceImpl implements BuyorderService {
         if(staff == null){
             throw new GlobalException(CodeMessage.PERMISSION_DENIED);
         }
-        try{
-            buyorderDao.insert(buyorder);
-            buydetailService.insertBuydetail(buyorder.getBuydetails());
-        }catch (Exception e){
+        Buyorder oldBuyorder = buyorderDao.selectByPrimaryKey(buyorder.getBoId());
+        if(oldBuyorder.getBoIsfinished() == true) {
             throw new GlobalException(CodeMessage.UPDATE_ERROR);
         }
         buyorderDao.updateByPrimaryKey(buyorder);
-        buydetailService.updateBuydetail(buyorder.getBuydetails());
+        buydetailService.updateBuydetails(buyorder.getBuydetails());
         return getById(buyorder.getBoId());
     }
 
     @Override
-    public List<Buyorder> listByFactors(Map<String, Object> map) {
-        return null;
+    public List<Buyorder> listByFactors(QueryDto queryDto) {
+        return buyorderDao.listByFactors(queryDto);
     }
 
     @Override
@@ -120,5 +120,34 @@ public class BuyorderServiceImpl implements BuyorderService {
     @Override
     public List<Buyorder> listBuyorder_COUNT() {
         return buyorderDao.listBuyorder_COUNT();
+    }
+
+    @Override
+    public void updateBuydetail(Buydetail buydetail) {
+        buydetailService.updateBuydetail(buydetail);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBuyorder(Staff staff, Long boId) {
+        if(staff == null){
+            throw new GlobalException(CodeMessage.PERMISSION_DENIED);
+        }
+        Buyorder oldBuyorder = buyorderDao.selectByPrimaryKey(boId);
+        if(oldBuyorder.getBoIsfinished() == true){
+            throw new GlobalException(CodeMessage.UPDATE_ERROR);
+        }
+        for(int i = 0; i < oldBuyorder.getBuydetails().size(); i++){
+            if (oldBuyorder.getBuydetails().get(i).getBdState() == 1){
+                throw new GlobalException(CodeMessage.UPDATE_ERROR);
+            }
+        }
+        buyorderDao.deleteByPrimaryKey(oldBuyorder.getBoId());
+        buydetailService.deleteBuydetail(oldBuyorder.getBuydetails());
+    }
+
+    @Override
+    public void listByFactors_COUNT(QueryDto queryDto) {
+        buyorderDao.listByFactors_COUNT(queryDto);
     }
 }

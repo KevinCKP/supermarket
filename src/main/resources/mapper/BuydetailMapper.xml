@@ -122,6 +122,9 @@
       <if test="bdState != null" >
         bd_state = #{bdState,jdbcType=TINYINT},
       </if>
+      <if test="bdInNumber != null">
+        bd_in_number = #{bdInNumber}
+      </if>
     </set>
     where bd_id = #{bdId,jdbcType=BIGINT}
   </update>

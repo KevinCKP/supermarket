@@ -28,13 +28,19 @@ public class BuydetailServiceImpl implements BuydetailService {
     }
 
     @Override
-    public boolean updateBuydetail(List<Buydetail> buydetails) {
+    public boolean updateBuydetails(List<Buydetail> buydetails) {
         return false;
     }
+
 
     @Override
     public boolean deleteBuydetail(List<Buydetail> buydetails) {
         return false;
+    }
+
+    @Override
+    public int updateBuydetail(Buydetail buydetail) {
+        return buydetailDao.updateByPrimaryKeySelective(buydetail);
     }
 
     public static void main(String[] args) {

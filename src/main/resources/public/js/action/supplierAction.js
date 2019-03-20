@@ -72,22 +72,24 @@ function querysupplier2(){
             var suppliers = data.list;
             $('#supplierTbody').html("");
             for(var i = 0, length_1 = suppliers.length; i < length_1; i++){
-                var index = (pageNum - 1) * pageSize + i + 1;
-                var supplier = suppliers[i];
-                var tr = '<tr><td><input type="checkbox" value="" name=""></td>'
-                    + '<td>' + suppliers[i].supplierId + '</td>'
-                    + '<td>' + suppliers[i].supplierName + '</td>'
-                    + '<td>' + suppliers[i].supplierLinkman + '</td>'
-                    + '<td>' + suppliers[i].supplierPhone + '</td>'
-                    + '<td>' + suppliers[i].supplierAddress + '</td>'
-                    + '<td>' + suppliers[i].supplierBank + '</td>'
-                    + '<td>' + suppliers[i].supplierAccount + '</td>'
-                    + '<td>' + suppliers[i].supplierNote + '</td>'
-                    + '<td>' + suppliers[i].supplierCreateTime + '</td>'
-                    + '<td>' + suppliers[i].supplierUpdateTime + '</td>'
-                    + '<td class="td-manage"> <a title="编辑" href="javascript:;" id="row-edit' + supplier.supplierId + '" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="supplier_del(' + this + "," + supplier.supplierId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>'
-                    + '</tr>';
-                $('#supplierTbody').append(tr);
+                (function (supplier) {
+                    var index = (pageNum - 1) * page
+                    var tr = '<tr><td><input type="checkbox" value="" name=""></td>'
+                        + '<td>' + supplier.supplierId + '</td>'
+                        + '<td>' + supplier.supplierName + '</td>'
+                        + '<td>' + suppliers.supplierLinkman + '</td>'
+                        + '<td>' + supplier.supplierPhone + '</td>'
+                        + '<td>' + supplier.supplierAddress + '</td>'
+                        + '<td>' + supplier.supplierBank + '</td>'
+                        + '<td>' + supplier.supplierAccount + '</td>'
+                        + '<td>' + supplier.supplierNote + '</td>'
+                        + '<td>' + supplier.supplierCreateTime + '</td>'
+                        + '<td>' + supplier.supplierUpdateTime + '</td>'
+                        + '<td class="td-manage"> <a title="编辑" href="javascript:;" id="row-edit' + supplier.supplierId + '" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="supplier_del(' + this + "," + supplier.supplierId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>'
+                        + '</tr>';
+                    $('#supplierTbody').append(tr);
+                })(suppliers[i]);
+
             }
             layui.use(['laypage', 'layer'], function(){
                 var laypage = layui.laypage,layer = layui.layer;

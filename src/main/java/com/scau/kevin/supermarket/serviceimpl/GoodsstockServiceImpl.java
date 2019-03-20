@@ -2,8 +2,6 @@ package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.GoodsstockDao;
 import com.scau.kevin.supermarket.entity.Goodsstock;
-import com.scau.kevin.supermarket.exception.GlobalException;
-import com.scau.kevin.supermarket.result.CodeMessage;
 import com.scau.kevin.supermarket.service.GoodsstockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,14 +34,8 @@ public class GoodsstockServiceImpl implements GoodsstockService{
 
     @Override
     public Goodsstock updateGoodsstock(Goodsstock goodsstock) {
-        if(goodsstock.getGoodsId() == null){
-            throw new GlobalException(CodeMessage.ID_EMPTY);
-        } else if(goodsstock.getGsWarnnumber() < 0){
-            throw new GlobalException(CodeMessage.WARNING_NUMBER_ZERO);
-        } else{
-            goodsstock.setGsUpdateTime(new Date(System.currentTimeMillis()));
-            goodsstockDao.updateByPrimaryKeySelective(goodsstock);
-        }
+        goodsstock.setGsUpdateTime(new Date(System.currentTimeMillis()));
+        goodsstockDao.updateByPrimaryKeySelective(goodsstock);
 
         return null;
     }

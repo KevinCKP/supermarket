@@ -1,5 +1,6 @@
 package com.scau.kevin.supermarket.dao;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Member;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,6 @@ public interface MemberDao {
     List<Member> selectListByFactors(Map<String,Object> map);
 
     List<Member> listMembers();
+
+    List<Member> listMembersByFactor(QueryDto queryDto);
 }

@@ -13,6 +13,8 @@
     <result column="bo_state" property="boState" jdbcType="TINYINT" />
     <result column="bo_isFinished" property="boIsfinished" jdbcType="BIT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="bo_goods_numbers" property="boGoodsNumbers" javaType="INTEGER" />
+    <result column="bo_goods_types" property="boGoodsTypes" javaType="INTEGER" />
     <collection property="buydetails" ofType="Buydetail">
       <id column="bd_id" property="bdId" jdbcType="BIGINT" />
       <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
@@ -21,7 +23,7 @@
       <result column="bd_price" property="bdPrice" jdbcType="DECIMAL" />
       <result column="bd_total" property="bdTotal" jdbcType="DECIMAL" />
       <result column="bd_note" property="bdNote" jdbcType="VARCHAR" />
-      <result column="bd_state" property="bdIsfinished" jdbcType="TINYINT" />
+      <result column="bd_state" property="bdState" jdbcType="TINYINT" />
       <result column="bd_in_number" property="bdInNumber" jdbcType="INTEGER"/>
       <association property="goods" javaType="com.scau.kevin.supermarket.entity.Goods" >
         <id column="goods_id" property="goodsId" jdbcType="BIGINT" />
@@ -50,6 +52,7 @@
   <sql id="Base_Column_List" >
     buyorder.bo_id, buyorder.bo_assessor, buyorder.bo_buyer, buyorder.bo_buyerName, buyorder.bo_assessorName,
     buyorder.bo_total, buyorder.bo_date, buyorder.bo_note, buyorder.bo_state, buyorder.bo_isFinished, buyorder.create_time,
+    buyorder.bo_goods_numbers, buyorder.bo_goods_types,
     buydetail.bd_id,buydetail.goods_id,buydetail.bo_id,buydetail.bd_number,
     buydetail.bd_price,buydetail.bd_total,buydetail.bd_note,buydetail.bd_state, buydetail.bd_in_number,
     goods.goods_id,goods.category_id,goods.supplier_id,goods.goods_name,goods.goods_barcode,
@@ -59,7 +62,8 @@
   </sql>
   <sql id="Base_Column_List2">
     buyorder.bo_id, buyorder.bo_assessor, buyorder.bo_buyer, buyorder.bo_buyerName, buyorder.bo_assessorName,
-    buyorder.bo_total, buyorder.bo_date, buyorder.bo_note, buyorder.bo_state, buyorder.bo_isFinished, buyorder.create_time
+    buyorder.bo_total, buyorder.bo_date, buyorder.bo_note, buyorder.bo_state, buyorder.bo_isFinished, buyorder.create_time,
+    buyorder.bo_goods_numbers, buyorder.bo_goods_types
   </sql>
   <sql id="fromTable">
     buyorder left join buydetail on buyorder.bo_id = buydetail.bo_id left join goods on buydetail.goods_id = goods.goods_id
@@ -83,38 +87,51 @@
     from
     buyorder
   </select>
-  <select id="listByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+  <select id="listByFactors" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
     select
     <include refid="Base_Column_List"/>
-    from <include refid="fromTable"/>
+    from
+    <include refid="fromTable"/>
     <where>
-      <if test="boId != null ">
-        and buyorder.bo_id = #{boId}
-      </if>
-      <if test="srBuyerName != null and buyerName != ''" >
-        and buyorder.bo_buyerName like "%"#{srBuyerName}"%"
-        <!-- and sr_buyerName like concat(concat('%',#{srBuyerName}),'%') -->
-      </if>
       <if test="beginTime != null and beginTime != ''">
-        <![CDATA[ and DATE_FORMAT(buyorder.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
+        <![CDATA[ and DATE_FORMAT(buyorder.bo_date,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
       </if>
       <if test="endTime != null and endTime != ''">
-        <![CDATA[ and DATE_FORMAT(buyorder.create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+        <![CDATA[ and DATE_FORMAT(buyorder.bo_date,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
       </if>
-      <if test="createTime != null and createTime != ''">
-        <![CDATA[ and DATE_FORMAT(buyorder.create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime},'%Y-%m-%d')]]>
+      <if test="factor != null and factor != ''">
+        and goods.goods_id like concat(concat('%',#{factor}),'%')
+        or
+        goods.goods_name like concat(concat('%',#{factor}),'%')
+        or
+        buyorder.bo_buyerName like concat(concat('%',#{factor}),'%')
+        or
+        buyorder.bo_buyer like concat(concat('%',#{factor}),'%')
       </if>
-      <if test="boState != null">
-        and buyorder.bo_state = #{boState}
+    </where>
+  </select>
+
+  <select id="listByFactors_COUNT" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
+    select
+    distinct buyorder.bo_id
+    from
+    <include refid="fromTable"/>
+    <where>
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(buyorder.bo_date,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
       </if>
-      <choose>
-        <when test="boIsFinished == null">
-          and buyorder.bo_isFinished is null 
-      </when>
-        <when test="boIsFinished != null">
-          and buyorder.bo_isFinished = #{boIsFinished,jdbcType=BOOLEAN}
-        </when>
-      </choose>
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(buyorder.bo_date,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
+      </if>
+      <if test="factor != null and factor != ''">
+        and goods.goods_id like concat(concat('%',#{factor}),'%')
+        or
+        goods.goods_name like concat(concat('%',#{factor}),'%')
+        or
+        buyorder.bo_buyerName like concat(concat('%',#{factor}),'%')
+        or
+        buyorder.bo_buyer like concat(concat('%',#{factor}),'%')
+      </if>
     </where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >

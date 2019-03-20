@@ -13,7 +13,9 @@ public interface BuydetailService {
     //插入订单详情
     boolean insertBuydetail(List<Buydetail> buydetails);
     //修改订单详情
-    boolean updateBuydetail(List<Buydetail> buydetails);
+    boolean updateBuydetails(List<Buydetail> buydetails);
     //删除订单详情
     boolean deleteBuydetail(List<Buydetail> buydetails);
+
+    int updateBuydetail(Buydetail buydetail);
 }

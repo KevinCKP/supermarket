@@ -23,6 +23,22 @@
     <include refid="Base_Column_List"/>
     from member
   </select>
+
+  <select id="listMembersByFactor" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
+    select
+    <include refid="Base_Column_List"/>
+    from
+    member
+    where
+      <if test="factor != null and factor != ''">
+        member_id like concat(concat('%',#{factor}),'%')
+        or
+        member_name like concat(concat('%',#{factor}),'%')
+        or
+        member_phone like concat(concat('%',#{factor}),'%')
+      </if>
+
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from member
     where member_id = #{memberId,jdbcType=BIGINT}

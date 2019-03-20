@@ -166,6 +166,64 @@ function querysalerecord(){
         }
     });
 }
+function querysalerecordByFactor() {
+    var pageNum = $("[name='pageNum']").val();
+    var pageSize = $("[name='pageSize']").val();
+    $.ajax({
+        url : "http://localhost:8080/sale/to_list2",
+        type : "GET",
+        data : {
+            pageNum : pageNum,
+            pageSize : pageSize,
+            orderby : "salerecord.sr_date desc",
+            beginTime : $("#beginTime").val(),
+            endTime : $("#endTime").val(),
+            factor : $("#factor").val()
+        },
+        success : function (result) {
+            var data = result.data;
+            var total = data.total;
+            var pageNum = data.pageNum;
+            var pageSize = data.pageSize;//页大小
+            var salerecords = data.list;
+            $('#salerecordTbody').html("");
+            for(var i = 0, length_1 = salerecords.length; i < length_1; i++){
+                (function (salerecord) {
+                    var index = (pageNum - 1) * pageSize + i + 1;
+                    console.log(salerecord.goods);
+                    var tr = '<tr>' + '<td>' + salerecord.srId + '</td>'
+                        + '<td>' + salerecord.srSalesman + '</td>'
+                        + '<td>' + salerecord.srTotal  + '</td>'
+                        + '<td>' + salerecord.srActualcharge + '</td>'
+                        + '<td>' + salerecord.srChange + '</td>'
+                        + '<td>' + salerecord.srProfit + '</td>'
+                        + '<td>' + salerecord.srNumber + '</td>'
+                        + '<td>' + salerecord.srDate + '</td>'
+                        + '<td>' + salerecord.srNote + '</td>';
+                    td =  '<td class="td-manage">' + '<a id="row-detail' + salerecord.srId + '" class="ml-5" title="详情">' +
+                        '<i class="Hui-iconfont">&#xe716;</i></input> ';
+                    tr = tr + td;
+                    tr = tr +  '<a href="#" id="row-edit'  + salerecord.srId + '" class="ml-5" title="添加备注"' +
+                        ' class="ml-5" style="text-decoration:none">' +
+                        '<i class="Hui-iconfont">&#xe60c;</i></a> ';
+                    tr = tr +  '<a href="#" id="row-delete' + salerecord.srId + '" class="ml-5" title="删除"' +
+                        ' class="ml-5" style="text-decoration:none">' +
+                        '<i class="Hui-iconfont">&#xe6e2;</i></a> ';
+                    + '</tr>';
+                    $('#salerecordTbody').append(tr);
+                    $('a#row-edit' + salerecord.srId).on('click', function () {
+                        salerecord_addNote(salerecord)
+                    });
+                    $('a#row-detail'+salerecord.srId).on('click',function () {
+                        salerecord_detail(salerecord);
+                    });
+                })(salerecords[i])
+            }
+            goodsPage2(total,pageNum,pageSize);
+        }
+    });
+
+}
 function salerecord_detail(salerecord) {
     var url = "/sale/saledetail.html";
     var w = 800;
@@ -255,6 +313,31 @@ function goodsPage(total,pageNum,pageSize){
                 $("[name='pageSize']").val(obj.limit);//向隐藏域设置当前页的大小
                 if (!first) {//首次不执行(点击的时候才执行)
                     querysalerecord();//执行查询分页函数(这个函数必须写在这里)
+                }
+            }
+        });
+    });
+}
+
+function goodsPage2(total,pageNum,pageSize){
+    layui.use(['laypage', 'layer'], function(){
+        var laypage = layui.laypage,layer = layui.layer;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageDiv', //注意，这里的 test1 是 ID，不用加 # 号
+            count: total, //数据总数，从服务端得到
+            limit: pageSize,//每页显示的条数。laypage将会借助 count 和 limit 计算出分页数。
+            curr: pageNum,//当前页号
+            limits: [6, 10, 15, 20],
+            layout: ['limit', 'prev', 'page', 'next', 'skip', 'count'],//显示哪些分页组件
+            jump: function (obj, first) {//点击页号的时候执行的函数
+                //obj包含了当前分页的所有参数，比如：
+
+                $("[name='pageNum']").val(obj.curr);//向隐藏域设置当前页的值
+                $("[name='pageSize']").val(obj.limit);//向隐藏域设置当前页的大小
+                if (!first) {//首次不执行(点击的时候才执行)
+                    querysalerecordByFactor();//执行查询分页函数(这个函数必须写在这里)
                 }
             }
         });

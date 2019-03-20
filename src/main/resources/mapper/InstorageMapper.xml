@@ -172,6 +172,11 @@
       </if>
     </trim>
   </insert>
+  <update id="updateNote">
+    update instorage
+    set is_note = #{isNote}
+    where is_id = #{isId}
+  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.scau.kevin.supermarket.entity.Instorage" >
     update instorage
     <set >

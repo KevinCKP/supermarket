@@ -1,11 +1,11 @@
 package com.scau.kevin.supermarket.dao;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface StaffDao {
@@ -25,5 +25,5 @@ public interface StaffDao {
 
     List<Staff> listStaffs();
 
-    List<Staff> listStaffsByFactors(Map<String,Object> map);
+    List<Staff> listStaffsByFactors(QueryDto queryDto);
 }

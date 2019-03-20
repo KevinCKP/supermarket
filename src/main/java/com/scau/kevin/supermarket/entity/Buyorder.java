@@ -20,8 +20,8 @@ public class Buyorder {
 
     private BigDecimal boTotal;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date boDate;
 
     private String boNote;
@@ -29,6 +29,10 @@ public class Buyorder {
     private Byte boState;
 
     private Boolean boIsfinished;
+
+    private Integer boGoodsNumbers;
+
+    private Integer boGoodsTypes;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
@@ -130,5 +134,21 @@ public class Buyorder {
 
     public void setBuydetails(List<Buydetail> buydetails) {
         this.buydetails = buydetails;
+    }
+
+    public Integer getBoGoodsNumbers() {
+        return boGoodsNumbers;
+    }
+
+    public void setBoGoodsNumbers(Integer boGoodsNumbers) {
+        this.boGoodsNumbers = boGoodsNumbers;
+    }
+
+    public Integer getBoGoodsTypes() {
+        return boGoodsTypes;
+    }
+
+    public void setBoGoodsTypes(Integer boGoodsTypes) {
+        this.boGoodsTypes = boGoodsTypes;
     }
 }

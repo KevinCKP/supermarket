@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.dao;
 
 import com.scau.kevin.supermarket.entity.Instorage;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface InstorageDao {
     List<Instorage> listInstorage();
 
     List<Instorage> listInstorageByFactors(Map<String,Object> map);
+
+    Instorage updateNote(@Param("isId") Long isId, @Param("isNote") String isNote);
 }

@@ -43,22 +43,25 @@
     from staff
   </select>
 
-  <select id="listStaffsByFactors" resultMap="BaseResultMap" parameterType="java.util.Map">
+  <select id="listStaffsByFactors" resultMap="BaseResultMap" parameterType="com.scau.kevin.supermarket.dto.QueryDto">
     select
     <include refid="Base_Column_List" />
     from staff
     <where>
-      <if test="staffName != null and staffName != ''">
-        staff_name = #{staffName}
+      <if test="beginTime != null and beginTime != ''">
+        <![CDATA[ and DATE_FORMAT(staff_create_time,'%Y-%m-%d') >= DATE_FORMAT(#{beginTime},'%Y-%m-%d')]]>
       </if>
-      <if test="staffType != null and staffType != ''">
-        staff_type = #{staffType}
+      <if test="endTime != null and endTime != ''">
+        <![CDATA[ and DATE_FORMAT(staff_create_time,'%Y-%m-%d') <= DATE_FORMAT(#{endTime},'%Y-%m-%d')]]>
       </if>
-      <if test="beginDate != null and beginDate != ''">
-        <![CDATA[ and DATE_FORMAT(staff_employDate,'%Y-%m-%d') >= DATE_FORMAT(#{beginDate},'%Y-%m-%d')]]>
-      </if>
-      <if test="endDate != null and endDate != ''">
-        <![CDATA[ and DATE_FORMAT(staff_employDate,'%Y-%m-%d') <= DATE_FORMAT(#{endDate},'%Y-%m-%d')]]>
+      <if test="factor != null and factor != ''">
+        and staff_id like concat(concat('%',#{factor}),'%')
+        or
+        staff_name like concat(concat('%',#{factor}),'%')
+        or
+        staff_phone like concat(concat('%',#{factor}),'%')
+        or
+        staff_type like concat(concat('%',#{factor}),'%')
       </if>
     </where>
   </select>

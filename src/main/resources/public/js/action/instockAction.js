@@ -32,17 +32,14 @@ function queryinstock(){
                         + '<td>' + instock.isGoodsTotal + '</td>'
                         + '<td>' + instock.isTime + '</td>'
                         + '<td>' + instock.isNote + '</td>';
-                    td =  '<td class="td-manage">' + '<a onclick="instock_delete(this,\'10001\')"  title="删除">' +
-                        '<i class="Hui-iconfont">&#xe631;</i></input> ';
-                    tr = tr + td;
-                    tr = tr +  '<a href="#" id="row-delete' + instock.gsId + '" class="row-delete" title="编辑"' +
+                    tr = tr +  '<td><a href="#" id="row-edit' + instock.isId + '" class="row-delete" title="修改备注"' +
                         ' class="ml-5" style="text-decoration:none">' +
-                        '<i class="Hui-iconfont">&#xe6df;</i></a> '
+                        '<i class="Hui-iconfont">&#xe6df;</i></a> </td>'
                         + '</tr>';
                     $('#instockTbody').append(tr);
-                    $('a#row-edit' + instock.gsId).on('click', function () {
-                        goods_edit(instock)
-                    })
+                    $('a#row-edit' + instock.isId).on('click', function () {
+                        instock_edit(instock)
+                    });
                 })(instocks[i])
             }
             goodsPage(total,pageNum,pageSize);
@@ -121,4 +118,43 @@ function instock_add(){
 }
 function instock_show(title,url,id,w,h){
     layer_show(title,url,w,h);
+}
+
+function instock_edit(instock) {
+    var title = "编辑";
+    var url = "/stock/instock-edit.html";
+    var w = 800;
+    var h = 500;
+    layer_show3(instock,title,url,w,h);
+
+}
+function layer_show3(instock,title,url,w,h){
+    if (title == null || title == '') {
+        title=false;
+    };
+    if (url == null || url == '') {
+        url="404.html";
+    };
+    if (w == null || w == '') {
+        w=800;
+    };
+    if (h == null || h == '') {
+        h=($(window).height() - 50);
+    };
+    layer.open({
+        type: 2,
+        area: [w+'px', h +'px'],
+        fix: false, //不固定
+        maxmin: true,
+        shade:0.4,
+        title: title,
+        content: url,
+        success : function (layero,index) {
+            console.log("呵呵");
+            var iframeWin = window[layero.find("iframe")[0]['name']];
+            var flag = iframeWin.renderInstockData(instock);
+            console.log("成功");
+            return flag;
+        }
+    });
 }

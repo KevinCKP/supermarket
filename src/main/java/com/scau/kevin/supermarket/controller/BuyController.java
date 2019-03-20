@@ -2,6 +2,8 @@ package com.scau.kevin.supermarket.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.scau.kevin.supermarket.dto.QueryDto;
+import com.scau.kevin.supermarket.entity.Buydetail;
 import com.scau.kevin.supermarket.entity.Buyorder;
 import com.scau.kevin.supermarket.entity.Buyreturn;
 import com.scau.kevin.supermarket.entity.Staff;
@@ -55,8 +57,13 @@ public class BuyController {
 
     // 条件查询采购单
     @RequestMapping("/order/to_list2")
-    public Result<PageInfo> toListByFactors(int pageNum, int pageSize, String orderby){
-        return null;
+    public Result<PageInfo> toListByFactors(int pageNum, int pageSize, String orderby, QueryDto queryDto){
+        List<Buyorder> buyorders = buyorderService.listByFactors(queryDto);
+        PageHelper.startPage(pageNum,pageSize,orderby);
+        buyorderService.listByFactors_COUNT(queryDto);
+        PageInfo<Buyorder> buyorderPageInfo = new PageInfo<>(buyorders);
+        System.out.println(queryDto.getFactor());
+        return Result.success(buyorderPageInfo);
     }
 
     @RequestMapping("/order/assessor")
@@ -72,12 +79,23 @@ public class BuyController {
         Buyorder buyorder = buyorderService.getById(buyorderId);
         return Result.success(buyorder);
     }
+    @RequestMapping("/order/detail/update")
+    public Result<Buydetail> updateDetail(@RequestBody Buydetail buydetail){
+        buyorderService.updateBuydetail(buydetail);
+        return Result.success(buydetail);
+    }
 
     @RequestMapping("/order/update")
     // 修改采购单
-    public Result<Buyorder> updateBuyorder(Staff staff, Buyorder buyorder){
+    public Result<Buyorder> updateBuyorder(Staff staff,@RequestBody Buyorder buyorder){
         Buyorder ret = buyorderService.updateBuyorder(staff,buyorder);
         return Result.success(ret);
+    }
+
+    @RequestMapping("/order/delete")
+    public Result<Boolean> deleteBuyorder(Staff staff,Long boId){
+        buyorderService.deleteBuyorder(staff,boId);
+        return Result.success(true);
     }
 
 

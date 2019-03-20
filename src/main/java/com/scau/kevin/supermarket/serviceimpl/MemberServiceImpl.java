@@ -1,6 +1,7 @@
 package com.scau.kevin.supermarket.serviceimpl;
 
 import com.scau.kevin.supermarket.dao.MemberDao;
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Member;
 import com.scau.kevin.supermarket.exception.GlobalException;
 import com.scau.kevin.supermarket.result.CodeMessage;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: kevin
@@ -43,8 +43,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> listByFactors(Map<String, Object> map) {
-        return null;
+    public List<Member> listMembersByFactor(QueryDto queryDto) {
+        return memberDao.listMembersByFactor(queryDto);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.scau.kevin.supermarket.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Supplier {
     private Long supplierId;

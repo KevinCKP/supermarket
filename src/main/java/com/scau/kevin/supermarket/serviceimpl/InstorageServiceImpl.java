@@ -68,4 +68,15 @@ public class InstorageServiceImpl implements InstorageService {
         map.put("endTime",endTime);
         return instorageDao.listInstorageByFactors(map);
     }
+
+    @Override
+    public Instorage updateInstorageNote(Long isId, String isNote) {
+        instorageDao.updateNote(isId,isNote);
+        return instorageDao.selectByPrimaryKey(isId);
+    }
+
+    @Override
+    public Instorage getById(Long isId) {
+        return instorageDao.selectByPrimaryKey(isId);
+    }
 }

@@ -1,5 +1,6 @@
 package com.scau.kevin.supermarket.service;
 
+import com.scau.kevin.supermarket.dto.QueryDto;
 import com.scau.kevin.supermarket.entity.Staff;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface StaffService {
 
     List<Staff> listStaffs();
 
-    List<Staff> listStaffsByFactors(String staffName, String staffType, String beginDate, String endDate);
+    List<Staff> listStaffsByFactors(QueryDto queryDto);
 }

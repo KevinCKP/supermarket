@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
@@ -16,59 +16,38 @@
     <link rel="stylesheet" type="text/css" href="../lib/Hui-iconfont/1.0.8/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../static/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/style.css" />
-    <!--[if IE 6]-->
+    <!--[if IE 6]>
     <script type="text/javascript" src="../lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <script type="text/javascript" src="../lib/lay/2.4/layer.js"></script>
+    <![endif]-->
+    <title>商品管理</title>
 </head>
 <body>
-<div class="mt-20">
-    <table class="table table-border table-bordered table-hover table-bg table-sort">
-        <input type="hidden" name="pageNum" id="pageNum" value="1">
-        <input type="hidden" name="pageSize" id="pageSize" value="6">
-        <thead>
-        <tr class="text-c">
-            <th>采购单号</th>
-            <th>采购员</th>
-            <th>商品种类数</th>
-            <th>商品总件数</th>
-            <th>采购总额</th>
-            <th>入库数量</th>
-            <th>采购状态</th>
-            <th>采购日期</th>
-            <th>创建时间</th>
-            <th>备注</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody id="buyorderTBody">
-        </tbody>
-    </table>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 商品中心 <span class="c-gray en">&gt;</span> 商品管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入分类编号、名称" id="factor" name="">
+        <button type="button" class="btn btn-success radius" onclick="queryTopCategory()" name=""><i class="Hui-iconfont">&#xe665;</i>搜分类</button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="topCategory_add()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加一级分类</a></span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <input type="hidden" name="pageNum" id="pageNum" value="1">
+            <input type="hidden" name="pageSize" id="pageSize" value="6">
+            <thead>
+            <tr class="text-c">
+                <th>分类编号</th>
+                <th>分类名称</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody id="categotryTbody">
+            </tbody>
+        </table>
+    </div>
+    <div id="pageDiv"></div>
 </div>
-
-<div class="mt-20">
-    <table class="table table-border table-bordered table-hover table-bg table-sort">
-        <thead>
-        <tr class="text-c">
-            <th>商品编号</th>
-            <th>商品名称</th>
-            <th>供应商</th>
-            <th>计量单位</th>
-            <th>商品品牌</th>
-            <th>采购价格</th>
-            <th>采购数量</th>
-            <th>总额</th>
-            <th>实际数量</th>
-            <th>状态</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody id="buydetailTBody">
-        </tbody>
-    </table>
-</div>
-<div id="pageDiv"></div>
-</body>
+<input type="hidden" id = "goodsUpdateId">
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="../lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
@@ -80,5 +59,15 @@
 <script type="text/javascript" src="../lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript" src="../lib/layui/layui.js"></script>
-<script type="text/javascript" src="../js/action/buyAction2.js"></script>
+<script type="text/javascript" src="../js/action/categoryAction.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        queryTopCategory();
+    });
+
+
+
+</script>
+</body>
 </html>

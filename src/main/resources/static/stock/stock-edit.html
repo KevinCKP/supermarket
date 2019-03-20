@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
@@ -23,86 +23,62 @@
 </head>
 <body>
 <article class="page-container">
-    <form class="form form-horizontal" id="form-admin-add">
+    <form class="form form-horizontal" id="form-admin-edit">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>商品编号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" id="goodsId" name="supplierId">
+                <input type="text" class="input-text" value="1" disabled id="goodsId" name="goodsId">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>商品名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="商品名字" id="goodsName" name="goodsName">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>商品条形码：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="商品条形码" id="goodsBarcode" name="goodsBarcode">
+                <input type="text" disabled class="input-text" value="" placeholder="商品名字" id="goodsName" name="goodsName">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>商品规格：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="goodsSpecification" name="goodsSpecification">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>计量单位：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsMetricunit" id="goodsMetricunit">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>商品产地：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsProduceplace" id="goodsProduceplace">
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>商品材质：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsMaterial" id="goodsMaterial">
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"></span>商品品牌：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsBrand" id="goodsBrand">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>进货价格：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsBuyprice" id="goodsBuyprice">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>销售价格：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsSalePrice" id="goodsSaleprice">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"></span>会员价格：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsMemPrice" id="goodsMemprice">
+                <input type="text" disabled class="input-text" placeholder="" name="goodsBrand" id="goodsBrand">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"></span>商品供应商：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="" name="goodsSupplier" id="goodsSupplier">
+                <input type="text" disabled class="input-text" placeholder="" name="goodsSupplier" id="goodsSupplier">
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">库存数量：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="" name="gsNumber" id="gsNumber">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">预警数量：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="" name="gsWarnnumber" id="gsWarnnumber">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">库存地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="" name="goodsSupplier" id="gsAddress">
+            </div>
+        </div>
+
+
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-                <input class="btn btn-primary radius" type="button" onclick="addGoods()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="button" onclick="updateGoodsstock2()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
             </div>
         </div>
+        <input hidden id="gsId" />
     </form>
 </article>
 
@@ -116,4 +92,35 @@
 <script type="text/javascript" src="../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="../lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="../lib/jquery.validation/1.14.0/messages_zh.js"></script>
-<script type="text/javascript" src="../js/action/goodsAction.js"> </script>
+<script type="text/javascript" src="../js/action/goodsstockAction.js"> </script>
+
+<script>
+    function renderGoodsstockData(goodsstock) {
+        $("#gsId").val(goodsstock.gsId);
+        $("#goodsId").val(goodsstock.goods.goodsId);
+        $("#goodsName").val(goodsstock.goods.goodsName);
+        $("#goodsSupplier").val(goodsstock.goods.goodsSupplier);
+        $("#goodsBrand").val(goodsstock.goods.goodsBrand);
+        $("#gsNumber").val(goodsstock.gsNumber);
+        $("#gsWarnnumber").val(goodsstock.gsWarnnumber);
+        $("#gsAddress").val(goodsstock.gsAddress);
+    }
+    function updateGoodsstock2() {
+        $.ajax({
+            url : "http://localhost:8080/stock/update",
+            type : "POST",
+            data : {
+                gsId : $("#gsId").val(),
+                gsNumber : $("#gsNumber").val(),
+                gsWarnnumber : $("#gsWarnnumber").val(),
+                gsAddress : $("#gsAddress").val()
+            },
+            success : function (result) {
+                layer.msg("修改成功");
+            },
+            error : function () {
+                layer.msg("服务器错误");
+            }
+        })
+    }
+</script>

@@ -57,7 +57,9 @@ public class StockController {
 
     // 编辑库存信息
     @RequestMapping("/update")
+    @ResponseBody
     public Object updateGoodsstock(Goodsstock goodsstock){
+        System.out.println("测试");
         goodsstockService.updateGoodsstock(goodsstock);
         return null;
     }
@@ -126,6 +128,12 @@ public class StockController {
         List<Instorage> instorages = instorageService.listInstorageByFactors(operatorName,goodsName,goodsId,beginTime,endTime);
         PageInfo<Instorage> instoragePageInfo = new PageInfo<>(instorages);
         return Result.success(instoragePageInfo);
+    }
+    @RequestMapping("/inStock/update")
+    @ResponseBody
+    public Result<Instorage> updateInstorageNote(Long isId, String isNote){
+        Instorage instorage = instorageService.updateInstorageNote(isId,isNote);
+        return Result.success(instorage);
     }
 
 
